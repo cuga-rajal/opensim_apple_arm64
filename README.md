@@ -24,17 +24,17 @@ https://creativecommons.org/licenses/by-nc-sa/3.0/
 You will need to install the package manager Brew, which will be used to
 install a number of required packages. To do this run the following at the terminal:
 
-	`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 Next, use Brew to install libgdiplus, which is required for Opensimultor.
 
-	`brew install mono-libgdiplus`
+	brew install mono-libgdiplus
 
 This will install about 30 packages which include prerequisites.
 
 To complete the installation, create a symbolic link:
 
-	`sudo ln -s /opt/homebrew/Cellar/mono-libgdiplus/6.1_1/lib/libgdiplus.dylib /usr/local/lib/libgdiplus.dylib`
+	sudo ln -s /opt/homebrew/Cellar/mono-libgdiplus/6.1_1/lib/libgdiplus.dylib /usr/local/lib/libgdiplus.dylib
 
 This link is required since Dotnet ignores shell environments and uses /usr/local
 as a hard coded location.
@@ -68,7 +68,7 @@ Confirm the account can access the database by logging in to it with a database 
 
 Unpack opensim source code use git to pull in the latest source with
 
-	`git clone git://opensimulator.org/git/opensim`
+	git clone git://opensimulator.org/git/opensim
 
 You should place the folder where it will permanently reside; problems will occur
 if you move it's path later. On my system I place it in my top level user folder, at
@@ -76,11 +76,11 @@ if you move it's path later. On my system I place it in my top level user folder
 
 Switch to the dotnet6 branch with
 
-	`git checkout dotnet6`
+	git checkout dotnet6
 	
 Follow the instructions in BUILDING.md to build opensim. On macOS this typically is:
 
-	`./runprebuild.sh
+	./runprebuild.sh
 	cp -f bin/System.Drawing.Common.dll.linux bin/System.Drawing.Common.dll
 	dotnet build --configuration Release OpenSim.sln
 
@@ -96,7 +96,7 @@ in this repository to the /bin directory in your opemsim file tree. Overwrite
 any files that might share the filename. Thats it. Then you are ready to start
 up opensim with the command: 
 
-  `cd /path/to/opensim/bin; ./opensim.sh`
+	cd /path/to/opensim/bin; ./opensim.sh
 
 ** To build arm64 libraries from source **
 
@@ -111,11 +111,11 @@ To install this, back up or rename the file at /private/etc/bashrc, then
 overwrite it with the file provided. If you are already in a terminal you will
 need to close it and open a new one to take effect, or you can type:
 
-  `source /etc/bashrc`
+	source /etc/bashrc
 
 You also need to set your default shell to /bin/bash, by using the Users
 and Groups preference pane. Right-click on a user and select Advanced Options.
-This opens a windows where you can set your default shell to /bin/bash. This
+This opens a window where you can set your default shell to /bin/bash. Bash
 is the preferred shell when working with older unmanaged software.
 
 Next you will need to install the latest Xcode Command Line Tools which is
@@ -130,28 +130,28 @@ Visit https://bitbucket.org/opensimulator/libopenmetaverse/src/master/openjpeg-d
 
 Go to Downlads -> Download Repository. Download and unpack.
 
-	`cd opensimulator-libopenmetaverse-*/openjpeg-dotnet
+	cd opensimulator-libopenmetaverse-*/openjpeg-dotnet
 	
 Download the file _Makefile.osx.diff_ from this repository and place it in this directory.
 Apply it with the following:
 
-	`patch Makefile.osx Makefile.osx.diff`
+	patch Makefile.osx Makefile.osx.diff
 
 Then build and install the shared library:	
 
-	`make -f Makefile.osx`
-	`cp -f libopenjpeg-dotnet-2-1.5.0-dotnet-1.dylib ~/opensim/bin/libopenjpeg-dotnet-x86_64.dylib`
+	make -f Makefile.osx
+	cp -f libopenjpeg-dotnet-2-1.5.0-dotnet-1.dylib ~/opensim/bin/libopenjpeg-dotnet-x86_64.dylib
 
 
 ** Installing ubODE **
 
-	`cd trunk/unmanaged/ubODE-OpenSim
+	cd trunk/unmanaged/ubODE-OpenSim
 	brew install libtool automake
 	PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"
 	./bootstrap
 	./configure --enable-shared --enable-double-precision 
 	make
-	cp -f ode/src/.libs/libubode.5.dylib ~/opensim/bin/libubode.dylib`
+	cp -f ode/src/.libs/libubode.5.dylib ~/opensim/bin/libubode.dylib
 	
 	
 ** Installing Bullet ** 
@@ -168,33 +168,34 @@ appears to work fine with Opensim.
 Download the tarball for Bullet 2.86 from
 	https://codeload.github.com/bulletphysics/bullet3/tar.gz/2.86.1
 	
-	`brew install cmake
+	brew install cmake
 	cd bullet3-2.86.1
 	mkdir bullet-build
 	cd bullet-build
 	cmake .. -G "Unix Makefiles" -DBUILD_EXTRAS=ON -DBUILD_DEMOS=OFF -DBUILD_SHARED_LIBS=OFF -DINSTALL_LIBS=ON -DINSTALL_EXTRA_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_INSTALL_PREFIX=./install
 	make
-	make install`
+	make install
 
-This installs Bullet .a files to bullet3-2.86.1/bullet-build/install/lib
-and includes into bullet3-2.86.1/bullet-build/install/include/bullet
+This installs
+  - Bullet .a files to bullet3-2.86.1/bullet-build/install/lib
+  - Bullet includes into bullet3-2.86.1/bullet-build/install/include/bullet
 
 Step 2 requires building the Bullet glue:
-	`cd opensim-libs/trunk/unmanaged/BulletSim/
+	cd opensim-libs/trunk/unmanaged/BulletSim/
 
 Download the file _BulletSim.diff_ from this repository and place it in this directory.
 Apply the patch with the following:
-	`patch -p0 < BulletSim.diff`
+	patch -p0 < BulletSim.diff
 
 Edit the Makefile and set IDIR and LDIR to the path for your .a and include files for Bullet.
 
-	`LDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/lib
-	IDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/include/bullet`
+	LDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/lib
+	IDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/include/bullet
 
 Then build and install:
 
-	`make
-	cp -f libBulletSim.dylib ~/opensim/bin/libBulletSim.dylib`
+	make
+	cp -f libBulletSim.dylib ~/opensim/bin/libBulletSim.dylib
 
 On my system, the same process works for Bullet 3.24 (stable) although I have not tested
 to see if there are problems or advantages with that version.
@@ -204,7 +205,7 @@ to see if there are problems or advantages with that version.
 
 Edit config files for your Opensim: OpenSim.ini, Regions.ini, etc. Then:
 
-	`cd opensim/bin; ./opensim.sh`
+	cd opensim/bin; ./opensim.sh
 
 
 
