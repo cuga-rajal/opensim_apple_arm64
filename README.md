@@ -232,7 +232,9 @@ Edit config files for your Opensim: OpenSim.ini, Regions.ini, etc. Then:
 
 -------------
 
-This is a work in progress. Please notify me of bugs or feature requests.
+If you like this project, please give me a star. 
+
+Notify me of any bugs or feature requests.
 
 Cuga Rajal (Second Life and Opensim)
 
