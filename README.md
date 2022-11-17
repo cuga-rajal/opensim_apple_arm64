@@ -4,9 +4,9 @@ Opensim Support for Apple Silicon M1/M2
 
 v1.0 / 17 November 2022
 
-Instructions and files are provided to support running Opensimulator server software
+This project provides instructions and files to run Opensimulator server software
 (http://opensimulator.org) fully native on an Apple computer with an M1/M2
-"Apple Silicon" chip.
+aka Apple Silicon chip.
 
 This package was tested and developed on a Macbook Pro 14" M1 Pro, macOS 12.6.1
 Monterey only. It has not been tested on Big Sur (macOS 11) or Ventura (macOS 13).
