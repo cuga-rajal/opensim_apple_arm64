@@ -6,10 +6,11 @@ v1.0 / 17 November 2022
 
 This project provides instructions and files to run Opensimulator server software
 (http://opensimulator.org) fully native on an Apple computer with an M1/M2
-aka Apple Silicon chip.
+'Apple silicon' chip, and to install a more recent version of the Bullet physics
+engine.
 
 This package was tested and developed on a Macbook Pro 14" M1 Pro, macOS 12.6.1
-Monterey only. It has not been tested on Big Sur (macOS 11) or Ventura (macOS 13).
+Monterey, Dotnet 6.0.11.
 
 These instructions and files are likely to change as they become merged into the
 main distribution. I will update this project as needed. Eventually this project
