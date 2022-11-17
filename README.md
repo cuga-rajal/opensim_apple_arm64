@@ -23,23 +23,26 @@ https://creativecommons.org/licenses/by-nc-sa/3.0/
 
 You will need to install the package manager Brew, which will be used to
 install a number of required packages. To do this run the following at the terminal:
+
 	`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
 
 Next, use Brew to install libgdiplus, which is required for Opensimultor.
+
 	`brew install mono-libgdiplus`
 
 This will install about 30 packages which include prerequisites.
 
 To complete the installation, create a symbolic link:
+
 	`sudo ln -s /opt/homebrew/Cellar/mono-libgdiplus/6.1_1/lib/libgdiplus.dylib /usr/local/lib/libgdiplus.dylib`
 
 This link is required since Dotnet ignores shell environments and uses /usr/local
 as a hard coded location.
 
-Download and install Dotnet6 SDK Installer for Arm64
+Download and install Dotnet6 SDK Installer for Arm64:
 	https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 
-Download and install the latest stable Mysql Community Server
+Download and install the latest stable Mysql Community Server:
 	https://dev.mysql.com/downloads/mysql/
 
   - After selecting the DMG package, on the next screen, click “No thanks, just start my download.”
@@ -64,6 +67,7 @@ Confirm the account can access the database by logging in to it with a database 
 ** Installing Opensim **
 
 Unpack opensim source code use git to pull in the latest source with
+
 	`git clone git://opensimulator.org/git/opensim`
 
 You should place the folder where it will permanently reside; problems will occur
@@ -71,12 +75,14 @@ if you move it's path later. On my system I place it in my top level user folder
 /Users/myname/opensim, or ~/opensim.
 
 Switch to the dotnet6 branch with
+
 	`git checkout dotnet6`
 	
 Follow the instructions in BUILDING.md to build opensim. On macOS this typically is:
-	`./runprebuild.sh`
-	`cp -f bin/System.Drawing.Common.dll.linux bin/System.Drawing.Common.dll`
-	`dotnet build --configuration Release OpenSim.sln`
+
+	`./runprebuild.sh
+	cp -f bin/System.Drawing.Common.dll.linux bin/System.Drawing.Common.dll
+	dotnet build --configuration Release OpenSim.sln
 
 You will also need to create some configuration files before Opensim will run.
 If you are migrating an existing system just copy over your config files. 
@@ -88,6 +94,7 @@ If you just want to run Opensimulator and don't want to build anything, copy the
 three .dylib files provided in this repository to the /bin directory in your opemsim
 file tree. Overwrite any files that might share the filename. Thats it. Then you are
 ready to start up opensim with the command: 
+
   `cd /path/to/opensim/bin; ./opensim.sh`
 
 ** To build arm64 libraries from source **
@@ -102,6 +109,7 @@ installed packages like Mysql (in /usr/local).
 To install this, back up or rename the file at /private/etc/bashrc, then
 overwrite it with the file provided. If you are already in a terminal you will
 need to close it and open a new one to take effect, or you can type:
+
   `source /etc/bashrc`
 
 You also need to set your default shell to /bin/bash, by using the Users
@@ -120,13 +128,16 @@ installer.
 Visit https://bitbucket.org/opensimulator/libopenmetaverse/src/master/openjpeg-dotnet/
 
 Go to Downlads -> Download Repository. Download and unpack.
+
 	`cd opensimulator-libopenmetaverse-*/openjpeg-dotnet
 	
 Download the file _Makefile.osx.diff_ from this repository and place it in this directory.
 Apply it with the following:
+
 	`patch Makefile.osx Makefile.osx.diff`
 
 Then build and install the shared library:	
+
 	`make -f Makefile.osx`
 	`cp -f libopenjpeg-dotnet-2-1.5.0-dotnet-1.dylib ~/opensim/bin/libopenjpeg-dotnet-x86_64.dylib`
 
@@ -175,12 +186,14 @@ Apply the patch with the following:
 	`patch -p0 < BulletSim.diff`
 
 Edit the Makefile and set IDIR and LDIR to the path for your .a and include files for Bullet.
-	LDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/lib
-	IDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/include/bullet
+
+	`LDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/lib
+	IDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/include/bullet`
 
 Then build and install:
-	`make`
-	`cp -f libBulletSim.dylib ~/opensim/bin/libBulletSim.dylib`
+
+	`make
+	cp -f libBulletSim.dylib ~/opensim/bin/libBulletSim.dylib`
 
 On my system, the same process works for Bullet 3.24 (stable) although I have not tested
 to see if there are problems or advantages with that version.
