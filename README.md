@@ -132,7 +132,7 @@ installer.
 
 Visit https://bitbucket.org/opensimulator/libopenmetaverse/src/master/openjpeg-dotnet/
 
-Go to Downlads -> Download Repository. Download and unpack.
+Go to Downloads -> Download Repository. Download and unpack.
 
 	cd opensimulator-libopenmetaverse-*/openjpeg-dotnet
 	
