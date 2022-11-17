@@ -90,10 +90,11 @@ If you are new to opensim, config file information is in BUILDING.md.
 
 ** Quick Start **
 
-If you just want to run Opensimulator and don't want to build anything, copy the
-three .dylib files provided in this repository to the /bin directory in your opemsim
-file tree. Overwrite any files that might share the filename. Thats it. Then you are
-ready to start up opensim with the command: 
+If you just want to run Opensimulator with the fewest steps, and don't want to
+build your own libraries, you can copy the three pre-built .dylib files provided
+in this repository to the /bin directory in your opemsim file tree. Overwrite
+any files that might share the filename. Thats it. Then you are ready to start
+up opensim with the command: 
 
   `cd /path/to/opensim/bin; ./opensim.sh`
 
