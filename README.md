@@ -188,6 +188,7 @@ This installs
   - Bullet includes into bullet3-2.86.1/bullet-build/install/include/bullet
 
 Step 2 requires building the Bullet glue:
+
 	cd opensim-libs/trunk/unmanaged/BulletSim/
 
 Download the file _BulletSim.diff_ from this repository and place it in this directory.
