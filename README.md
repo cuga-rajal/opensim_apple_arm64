@@ -133,6 +133,11 @@ provided free by Apple. As of this writing the Xcode Command Line Tools version
 is 14.1. You may need to sign a developer license with Apple to access the
 installer.
 
+Download the repository for opensim-libs, which contains projects needed for the
+physics engines. 
+
+	git clone git://opensimulator.org/git/opensim-libs
+
 -------------
 **Installing Libopenjpeg**
 
@@ -150,7 +155,7 @@ Apply it with the following:
 Then build and install the shared library:	
 
 	make -f Makefile.osx
-	cp -f libopenjpeg-dotnet-2-1.5.0-dotnet-1.dylib ~/opensim/bin/libopenjpeg-dotnet-x86_64.dylib
+	cp -f libopenjpeg-dotnet-2-1.5.0-dotnet-1.dylib /path/to/opensim/bin/libopenjpeg-dotnet-x86_64.dylib
 
 Note: This copy step changes the filename to indicate an incorrect architecture, x86\_64, even though
 the file is built for arm64. This file naming is required by dotnet, because it cannot detect
@@ -159,13 +164,13 @@ architecture.
 -------------
 **Installing ubODE**
 
-	cd trunk/unmanaged/ubODE-OpenSim
+	cd /path/to/opensim-libs/trunk/unmanaged/ubODE-OpenSim
 	brew install libtool automake
 	PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"
 	./bootstrap
 	./configure --enable-shared --enable-double-precision 
 	make
-	cp -f ode/src/.libs/libubode.5.dylib ~/opensim/bin/libubode.dylib
+	cp -f ode/src/.libs/libubode.5.dylib /path/to/opensim/bin/libubode.dylib
 	
 -------------
 **Installing Bullet** 
@@ -196,7 +201,7 @@ This installs
 
 Step 2 requires building the Bullet glue:
 
-	cd opensim-libs/trunk/unmanaged/BulletSim/
+	cd /path/to/opensim-libs/trunk/unmanaged/BulletSim/
 
 Download the file _BulletSim.diff_ from this repository and place it in this directory.
 Apply the patch with the following:
@@ -211,7 +216,7 @@ Edit the Makefile and set IDIR and LDIR to the path for your .a and include file
 Then build and install:
 
 	make
-	cp -f libBulletSim.dylib ~/opensim/bin/libBulletSim.dylib
+	cp -f libBulletSim.dylib /path/to/opensim/bin/libBulletSim.dylib
 
 On my system, the same process works for Bullet 3.24 (stable) although I have not tested
 to see if there are problems or advantages with that version.
@@ -221,7 +226,7 @@ to see if there are problems or advantages with that version.
 
 Edit config files for your Opensim: OpenSim.ini, Regions.ini, etc. Then:
 
-	cd opensim/bin; ./opensim.sh
+	cd /path/to/opensim/bin; ./opensim.sh
 
 
 
