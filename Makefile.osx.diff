@@ -1,0 +1,20 @@
+--- Makefile.osx-orig	2022-09-22 13:15:49.000000000 -0700
++++ Makefile.osx	2022-11-16 13:11:20.000000000 -0800
+@@ -14,7 +14,7 @@
+ LIBTOOLDYN = g++
+ 
+ 
+-COMPILERFLAGS = -O3 -fPIC -m32
++COMPILERFLAGS = -arch arm64 -dynamic -O2 -fPIC 
+ 
+ MODULES = $(SRCS:.c=.o)
+ CPPMODULES = $(CPPSRCS:.cpp=.o)
+@@ -51,7 +51,7 @@
+ 	$(CC) $(CFLAGS) -c $< -o $@
+ 
+ $(SHAREDLIB): $(MODULES) $(CPPMODULES)
+-	$(LIBTOOLDYN) -m32 -dynamiclib -o $@ $(MODULES) $(CPPMODULES) $(LIBRARIES)
++	$(LIBTOOLDYN) -arch arm64 -dynamiclib -o $@ $(MODULES) $(CPPMODULES) $(LIBRARIES)
+ 
+ 
+ 

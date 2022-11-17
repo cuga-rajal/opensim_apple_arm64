@@ -1,0 +1,84 @@
+diff -u opensim-libs/trunk/unmanaged/BulletSim/API2.cpp opensim-libs-orig/trunk/unmanaged/BulletSim/API2.cpp
+--- opensim-libs/trunk/unmanaged/BulletSim/API2.cpp	2022-11-16 12:41:34.000000000 -0800
++++ opensim-libs-orig/trunk/unmanaged/BulletSim/API2.cpp	2022-11-15 10:40:28.000000000 -0800
+@@ -599,7 +599,7 @@
+ 	}
+ 
+ 	// Remove from special collision objects. A NOOP if not in the list.
+-	IDTYPE id = CONVLOCALID((size_t)obj->getUserPointer());
++	IDTYPE id = CONVLOCALID(obj->getUserPointer());
+ 	sim->getWorldData()->specialCollisionObjects.erase(id);
+ 
+ 	// finally make the object itself go away
+@@ -2775,7 +2775,7 @@
+ EXTERN_C DLL_EXPORT void DumpRigidBody2(BulletSim* sim, btCollisionObject* obj)
+ {
+ 	sim->getWorldData()->BSLog("DumpRigidBody: id=%u, loc=%x, pos=<%f,%f,%f>, orient=<%f,%f,%f,%f>",
+-				CONVLOCALID((size_t)obj->getUserPointer()),
++				CONVLOCALID(obj->getUserPointer()),
+ 				obj,
+ 				(float)obj->getWorldTransform().getOrigin().getX(),
+ 				(float)obj->getWorldTransform().getOrigin().getY(),
+@@ -2912,7 +2912,7 @@
+ 	}
+ 	sim->getWorldData()->BSLog("DumpCollisionShape: type=%s, id=%u, loc=%x, margin=%f, isMoving=%s, isConvex=%s",
+ 			shapeTypeName,
+-			CONVLOCALID((size_t)shape->getUserPointer()),
++			CONVLOCALID(shape->getUserPointer()),
+ 			shape,
+ 			(float)shape->getMargin(),
+ 			shape->isNonMoving() ? "true" : "false",
+@@ -3064,7 +3064,7 @@
+ 	{
+ 		btCollisionObject* obj = collisionObjects[ii];
+ 		// If there is an object and it probably is not terrain, dump.
+-		if (obj && (CONVLOCALID((size_t)obj->getUserPointer()) > 100))
++		if (obj && (CONVLOCALID(obj->getUserPointer()) > 100))
+ 		{
+ 			sim->getWorldData()->BSLog("===========================================");
+ 			DumpRigidBody2(sim, obj);
+diff -u opensim-libs/trunk/unmanaged/BulletSim/BulletSim.cpp opensim-libs-orig/trunk/unmanaged/BulletSim/BulletSim.cpp
+--- opensim-libs/trunk/unmanaged/BulletSim/BulletSim.cpp	2022-11-16 12:43:16.000000000 -0800
++++ opensim-libs-orig/trunk/unmanaged/BulletSim/BulletSim.cpp	2022-11-15 10:40:28.000000000 -0800
+@@ -403,8 +403,8 @@
+ 	}
+ 
+ 	// Get the IDs of colliding objects (stored in the one user definable field)
+-	IDTYPE idA = CONVLOCALID((size_t)objA->getUserPointer());
+-	IDTYPE idB = CONVLOCALID((size_t)objB->getUserPointer());
++	IDTYPE idA = CONVLOCALID(objA->getUserPointer());
++	IDTYPE idB = CONVLOCALID(objB->getUserPointer());
+ 
+ 	// Make sure idA is the lower ID so we don't record both 'A hit B' and 'B hit A'
+ 	if (idA > idB)
+@@ -1137,7 +1137,7 @@
+ 	m_worldData.dynamicsWorld->rayTest(from, to, hitResult);
+ 	if (hitResult.hasHit())
+ 	{
+-		hit.ID = CONVLOCALID((size_t)hitResult.m_collisionObject->getUserPointer());
++		hit.ID = CONVLOCALID(hitResult.m_collisionObject->getUserPointer());
+ 		hit.Fraction = hitResult.m_closestHitFraction;
+ 		hit.Normal = hitResult.m_hitNormalWorld;
+ 		hit.Point = hitResult.m_hitPointWorld;
+diff -u opensim-libs/trunk/unmanaged/BulletSim/Makefile opensim-libs-orig/trunk/unmanaged/BulletSim/Makefile
+--- opensim-libs/trunk/unmanaged/BulletSim/Makefile	2022-11-16 12:48:41.000000000 -0800
++++ opensim-libs-orig/trunk/unmanaged/BulletSim/Makefile	2022-11-15 10:40:28.000000000 -0800
+@@ -33,14 +33,14 @@
+ # OSX build. Builds 32bit dylib on 64bit system. (Need 32bit because Mono is 32bit only).
+ ifeq ($(UNAME), Darwin)
+ TARGET = libBulletSim.dylib
+-CC = gcc
+-LD = g++
++# CC = clang
++# LD = clang
+ #CFLAGS = -m32 -I$(IDIR) -fPIC -g
+ #LFLAGS = -m32 -dynamiclib -Wl -o $(TARGET)
+ #CFLAGS = -m32 -arch i386 -stdlib=libstdc++ -mmacosx-version-min=10.6 -I$(IDIR) -g 
+ #LFLAGS = -v -m32 -arch i386 -std=c++11 -stdlib=libstdc++ -mmacosx-version-min=10.6 -dynamic -o $(TARGET)
+-CFLAGS = -arch arm64 -fPIC -O2 -I$(IDIR) -g 
+-LFLAGS = -v -dynamiclib -arch arm64 -o $(TARGET)
++CFLAGS = -arch i386 -arch x86_64 -std=c++11  -O3 -I$(IDIR) -g 
++LFLAGS = -v -dynamiclib -arch i386 -arch x86_64 -o $(TARGET)
+ endif
+ 
+ BASEFILES = API2.cpp BulletSim.cpp
