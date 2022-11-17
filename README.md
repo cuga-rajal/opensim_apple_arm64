@@ -98,6 +98,10 @@ up opensim with the command:
 
 	cd /path/to/opensim/bin; ./opensim.sh
 
+Note: The file libopenjpeg-dotnet-x86\_64.dylib in this repository is not built for
+the x86_64 architecture!! It is built for arm64 and this file naming is required by
+dotnet.
+
 ** To build arm64 libraries from source **
 
 You will need to have a shell environment with a complete set of environment 
@@ -142,6 +146,9 @@ Then build and install the shared library:
 	make -f Makefile.osx
 	cp -f libopenjpeg-dotnet-2-1.5.0-dotnet-1.dylib ~/opensim/bin/libopenjpeg-dotnet-x86_64.dylib
 
+Note: This copy step changes the filename to indicate an incorrect architecture, x86\_64, even though
+the file is built for arm64. This file naming is required by dotnet, because it cannot detect
+architecture.
 
 ** Installing ubODE **
 
@@ -185,6 +192,7 @@ Step 2 requires building the Bullet glue:
 
 Download the file _BulletSim.diff_ from this repository and place it in this directory.
 Apply the patch with the following:
+
 	patch -p0 < BulletSim.diff
 
 Edit the Makefile and set IDIR and LDIR to the path for your .a and include files for Bullet.
