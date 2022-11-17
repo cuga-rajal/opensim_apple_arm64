@@ -234,7 +234,7 @@ Edit config files for your Opensim: OpenSim.ini, Regions.ini, etc. Then:
 
 If you like this project, please give me a star. 
 
-Notify me of any bugs or feature requests.
+Please notify me of any bugs or feature requests.
 
 Cuga Rajal (Second Life and Opensim)
 
