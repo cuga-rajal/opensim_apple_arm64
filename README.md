@@ -18,8 +18,11 @@ will eventually become superceded.
 Until then, this work is licensed under Creative Commons BY-NC-SA 3.0:
 https://creativecommons.org/licenses/by-nc-sa/3.0/
 
------
-** Required Prerequisites **
+-------------
+**Required Prerequisites**
+
+An Apple computer with an M1 or M2 chip. Currently the entire line of Apple Macs
+are using these.
 
 You will need to install the package manager Brew, which will be used to
 install a number of required packages. To do this run the following at the terminal:
@@ -64,7 +67,8 @@ create a new empty database for a fresh install of opensim.
 Set up a Mysql user account that has all priveleges granted for the opensim database. 
 Confirm the account can access the database by logging in to it with a database client.
 
-** Installing Opensim **
+-------------
+**Installing Opensim**
 
 Unpack opensim source code use git to pull in the latest source with
 
@@ -88,7 +92,8 @@ You will also need to create some configuration files before Opensim will run.
 If you are migrating an existing system just copy over your config files. 
 If you are new to opensim, config file information is in BUILDING.md.
 
-** Quick Start **
+-------------
+**Quick Start**
 
 If you just want to run Opensimulator with the fewest steps, and don't want to
 build your own libraries, you can copy the three pre-built .dylib files provided
@@ -102,7 +107,8 @@ Note: The file libopenjpeg-dotnet-x86\_64.dylib in this repository is not built 
 the x86_64 architecture!! It is built for arm64 and this file naming is required by
 dotnet.
 
-** To build arm64 libraries from source **
+-------------
+**To build arm64 libraries from source**
 
 You will need to have a shell environment with a complete set of environment 
 variables appropriately set for the development work. I am providing a sample
@@ -127,8 +133,8 @@ provided free by Apple. As of this writing the Xcode Command Line Tools version
 is 14.1. You may need to sign a developer license with Apple to access the
 installer.
 
-
-** Installing Libopenjpeg **
+-------------
+**Installing Libopenjpeg**
 
 Visit https://bitbucket.org/opensimulator/libopenmetaverse/src/master/openjpeg-dotnet/
 
@@ -150,7 +156,8 @@ Note: This copy step changes the filename to indicate an incorrect architecture,
 the file is built for arm64. This file naming is required by dotnet, because it cannot detect
 architecture.
 
-** Installing ubODE **
+-------------
+**Installing ubODE**
 
 	cd trunk/unmanaged/ubODE-OpenSim
 	brew install libtool automake
@@ -160,8 +167,8 @@ architecture.
 	make
 	cp -f ode/src/.libs/libubode.5.dylib ~/opensim/bin/libubode.dylib
 	
-	
-** Installing Bullet ** 
+-------------
+**Installing Bullet** 
 
 Installation is done in 2 steps. First, compile a Bullet distribution and
 install .a and include files into a temporary directory. Then, compile the
@@ -209,8 +216,8 @@ Then build and install:
 On my system, the same process works for Bullet 3.24 (stable) although I have not tested
 to see if there are problems or advantages with that version.
 
-
-** Start Up Opensim, the Dotnet Way **
+-------------
+**Start Up Opensim, the Dotnet Way**
 
 Edit config files for your Opensim: OpenSim.ini, Regions.ini, etc. Then:
 
@@ -218,7 +225,7 @@ Edit config files for your Opensim: OpenSim.ini, Regions.ini, etc. Then:
 
 
 
----
+-------------
 
 This is a work in progress. Please notify me of bugs or feature requests.
 
