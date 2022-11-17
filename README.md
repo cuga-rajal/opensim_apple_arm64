@@ -1,5 +1,7 @@
 # opensim_macos_arm64
+
 Opensim Support for Apple Silicon M1/M2
+
 v1.0 / 17 November 2022
 
 Instructions and files are provided to support running Opensimulator server software
@@ -9,8 +11,9 @@ Instructions and files are provided to support running Opensimulator server soft
 This package was tested and developed on a Macbook Pro 14" M1 Pro, macOS 12.6.1
 Monterey only. It has not been tested on Big Sur (macOS 11) or Ventura (macOS 13).
 
-These instructions and files are likely to change in the future as they become included
-in the main distribution. I expect this project will eventually become superceded.
+These instructions and files are likely to change as they become absorbed
+in the main distribution. I will update this as needed and expect this project
+will eventually become superceded.
 
 Until then, this work is licensed under Creative Commons BY-NC-SA 3.0:
 https://creativecommons.org/licenses/by-nc-sa/3.0/
