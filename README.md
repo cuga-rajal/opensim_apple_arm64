@@ -103,9 +103,6 @@ up opensim with the command:
 
 	cd /path/to/opensim/bin; ./opensim.sh
 
-Note: The file libopenjpeg-dotnet-x86\_64.dylib in this repository is not built for
-the x86_64 architecture!! It is built for arm64 and this file naming is required by
-dotnet.
 
 -------------
 **To build arm64 libraries from source**
