@@ -16,7 +16,7 @@ These instructions and files are likely to change as they become merged into the
 main distribution. I will update this project as needed. Eventually this project
 will be superceded.
 
-Until then, this work is licensed under Creative Commons BY-NC-SA 3.0:
+Until then, you can get them here. This work is licensed under Creative Commons BY-NC-SA 3.0:
 https://creativecommons.org/licenses/by-nc-sa/3.0/
 
 -------------
