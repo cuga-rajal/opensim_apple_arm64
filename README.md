@@ -112,8 +112,8 @@ installed tools/libraries from Brew (in /opt/homebrew) and from independently
 installed packages like Mysql (in /usr/local). 
 
 To install this, back up or rename the file at /private/etc/bashrc, then
-overwrite it with the file provided. If you are already in a terminal you will
-need to close it and open a new one to take effect, or you can type:
+move the file _bashrc_ from this repository to /etc/bashrc. If you are already in a terminal, you will
+need to close it and open a new one to take effect, or you can apply the changes by typing:
 
 	source /etc/bashrc
 
