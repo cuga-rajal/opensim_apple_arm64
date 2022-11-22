@@ -30,7 +30,7 @@ install a number of required packages. To do this run the following at the termi
 
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-Next, use Brew to install libgdiplus, which is required for Opensimultor.
+Next, use Brew to install libgdiplus, which is required for Opensimulator.
 
 	brew install mono-libgdiplus
 
@@ -71,7 +71,7 @@ Confirm the account can access the database by logging in to it with a database 
 -------------
 **Installing Opensim**
 
-Unpack opensim source code use git to pull in the latest source with
+Use git to pull in the latest source with
 
 	git clone git://opensimulator.org/git/opensim
 
@@ -90,8 +90,8 @@ Follow the instructions in BUILDING.md to build opensim. On macOS this typically
 	dotnet build --configuration Release OpenSim.sln
 
 You will also need to create some configuration files before Opensim will run.
-If you are migrating an existing system just copy over your config files. 
-If you are new to opensim, config file information is in BUILDING.md.
+If you are migrating an existing system, just copy over your config files. 
+If you are new to opensim, config file requirements are explained in BUILDING.md.
 
 -------------
 **Quick Start**
@@ -109,22 +109,29 @@ up opensim with the command:
 **To build arm64 libraries from source**
 
 You will need to have a shell environment with a complete set of environment 
-variables appropriately set for the development work. I am providing a sample
+variables appropriately set for the development work. Bash (Bourne-again shell)
+is the preferred shell when working with older unmanaged software.
+
+Apple sets the default shell to zsh, so this will need to be changed.
+Open the Users
+and Groups preference pane. Right-click on your username and select Advanced Options.
+This opens a window where you can change your default shell to /bin/bash. 
+
+The steps involving compiling code (cmake or make) will throw errors if you do not
+set your PATH and related environment variables. I am providing a sample
 bashrc file which is a good replacement for the default that Apple provides.
-This includes paths for typical Apple silicon systems that have a mix of
+This includes enviroinment paths for a mix of
 installed tools/libraries from Brew (in /opt/homebrew) and from independently
 installed packages like Mysql (in /usr/local). 
 
 To install this, back up or rename the file at /private/etc/bashrc, then
-move the file _bashrc_ from this repository to /etc/bashrc. If you are already in a terminal, you will
-need to close it and open a new one to take effect, or you can apply the changes by typing:
+move the file _bashrc_ from this repository to /etc/bashrc.
+
+Once this is installed it will take effect in any new terminal windows
+that you open. If you want these environment variables to be applied
+top a terminal window already open, you can apply the changes by typing:
 
 	source /etc/bashrc
-
-You also need to set your default shell to /bin/bash, by using the Users
-and Groups preference pane. Right-click on a user and select Advanced Options.
-This opens a window where you can set your default shell to /bin/bash. Bash
-is the preferred shell when working with older unmanaged software.
 
 Next you will need to install the latest Xcode Command Line Tools which is
 provided free by Apple. As of this writing the Xcode Command Line Tools version
@@ -156,7 +163,8 @@ Then build and install the shared library:
 	cp -f libopenjpeg-dotnet-2-1.5.0-dotnet-1.dylib /path/to/opensim/bin/libopenjpeg-dotnet-x86_64.dylib
 
 Note: This copy step changes the filename to indicate an incorrect architecture, x86\_64, even though
-the file is built for arm64. This file naming is required by dotnet, because it cannot detect
+the file is built for arm64. This architecture mismatch in the filename is required by dotnet6
+as of this writing. The required filename is hard-coded since the dotnet6 framework cannot detect
 architecture.
 
 -------------
