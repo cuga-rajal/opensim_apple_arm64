@@ -129,7 +129,7 @@ move the file _bashrc_ from this repository to /etc/bashrc.
 
 Once this is installed it will take effect in any new terminal windows
 that you open. If you want these environment variables to be applied
-top a terminal window already open, you can apply the changes by typing:
+to a terminal window already open, you can apply the changes by typing:
 
 	source /etc/bashrc
 
