@@ -2,7 +2,7 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v1.0 / 17 November 2022
+v1.1 / 30 November 2022
 
 This project provides instructions and files to run Opensimulator server software
 (http://opensimulator.org) fully native on an Apple computer with an M1/M2
@@ -16,7 +16,10 @@ These instructions and files are likely to change as they become merged into the
 main distribution. I will update this project as needed. Eventually this project
 will be superceded.
 
-Until then, you can get them here. This work is licensed under Creative Commons BY-NC-SA 3.0:
+The static libraries that were previously included in this repository have been
+added to the main distribution, so they are no longer needed here and have been removed..
+
+This work is licensed under Creative Commons BY-NC-SA 3.0:
 https://creativecommons.org/licenses/by-nc-sa/3.0/
 
 -------------
@@ -94,19 +97,21 @@ If you are migrating an existing system, just copy over your config files.
 If you are new to opensim, config file requirements are explained in BUILDING.md.
 
 -------------
-**Quick Start**
+**Start Up Opensim, the Dotnet Way**
 
-If you just want to run Opensimulator with the fewest steps, and don't want to
-build your own libraries, you can copy the three pre-built .dylib files provided
-in this repository to the /bin directory in your opemsim file tree. Overwrite
-any files that might share the filename. Thats it. Then you are ready to start
-up opensim with the command: 
+Once the config files are set up, you arr ready to start the server:
 
 	cd /path/to/opensim/bin; ./opensim.sh
 
 
 -------------
 **To build arm64 libraries from source**
+
+For reference I am including the steps to build the three shared library files
+now included in the distribution. Should there be a need to recompile a
+physics engine or openjpeg library for the Apple arm64 platform these steps
+can be used. There is also an opportunity to build a more recent version of the
+Bullet physics engine using the steps provided. 
 
 You will need to have a shell environment with a complete set of environment 
 variables appropriately set for the development work. Bash (Bourne-again shell)
@@ -160,12 +165,7 @@ Apply it with the following:
 Then build and install the shared library:	
 
 	make -f Makefile.osx
-	cp -f libopenjpeg-dotnet-2-1.5.0-dotnet-1.dylib /path/to/opensim/bin/libopenjpeg-dotnet-x86_64.dylib
-
-Note: This copy step changes the filename to indicate an incorrect architecture, x86\_64, even though
-the file is built for arm64. This architecture mismatch in the filename is required by dotnet6
-as of this writing. The required filename is hard-coded since the dotnet6 framework cannot detect
-architecture.
+	cp -f libopenjpeg-dotnet-2-1.5.0-dotnet-1.dylib /path/to/opensim/bin/lib64/libopenjpeg-dotnet-arm64.dylib
 
 -------------
 **Installing ubODE**
@@ -176,7 +176,7 @@ architecture.
 	./bootstrap
 	./configure --enable-shared --enable-double-precision 
 	make
-	cp -f ode/src/.libs/libubode.5.dylib /path/to/opensim/bin/libubode.dylib
+	cp -f ode/src/.libs/libubode.5.dylib /path/to/opensim/bin/lib64/libubode-arm64.dylib
 	
 -------------
 **Installing Bullet** 
@@ -186,7 +186,7 @@ install .a and include files into a temporary directory. Then, compile the
 "Bullet Glue" which packages the Bullet libraries, along with connector
 libraries, into a single static library.
 
-The version of Bullet currently in opensim-libs is 2.74, however, this will not
+The version of Bullet currently in opensim-libs repository is 2.74, however, this will not
 build on an Apple M1. A more recent version, 2.86, does build and install and
 appears to work fine with Opensim.
 
@@ -222,18 +222,10 @@ Edit the Makefile and set IDIR and LDIR to the path for your .a and include file
 Then build and install:
 
 	make
-	cp -f libBulletSim.dylib /path/to/opensim/bin/libBulletSim.dylib
+	cp -f libBulletSim.dylib /path/to/opensim/bin/lib64/libBulletSim-arm64.dylib
 
 On my system, the same process works for Bullet 3.24 (stable) although I have not tested
 to see if there are problems or advantages with that version.
-
--------------
-**Start Up Opensim, the Dotnet Way**
-
-Edit config files for your Opensim: OpenSim.ini, Regions.ini, etc. Then:
-
-	cd /path/to/opensim/bin; ./opensim.sh
-
 
 
 -------------
