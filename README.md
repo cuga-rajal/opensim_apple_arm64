@@ -130,7 +130,7 @@ installed tools/libraries from Brew (in /opt/homebrew) and from independently
 installed packages like Mysql (in /usr/local). 
 
 To install this, back up or rename the file at /private/etc/bashrc, then
-move the file _bashrc_ from this repository to /etc/bashrc.
+move the file _bashrc_ from this repository to /private/etc/bashrc.
 
 Once this is installed it will take effect in any new terminal windows
 that you open. If you want these environment variables to be applied
