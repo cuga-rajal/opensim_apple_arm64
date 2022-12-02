@@ -5,8 +5,8 @@ Opensim Support for Apple Silicon M1/M2
 v1.2 / 1 December 2022
 
 This project provides instructions and files to run Opensimulator server software
-(http://opensimulator.org) fully native on an Apple computer with an M1/M2
-'Apple silicon' chip, and to install a more recent version of the Bullet physics
+(http://opensimulator.org) fully native on an Apple Mac computer with an
+Apple Silicon chip, and to install a more recent version of the Bullet physics
 engine on that system.
 
 This project originally provided the components to run Opensim
