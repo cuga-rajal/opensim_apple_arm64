@@ -2,28 +2,40 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v1.1 / 30 November 2022
+v1.2 / 1 December 2022
 
 This project provides instructions and files to run Opensimulator server software
 (http://opensimulator.org) fully native on an Apple computer with an M1/M2
 'Apple silicon' chip, and to install a more recent version of the Bullet physics
-engine.
+engine on that system.
 
-This package was tested and developed on a Macbook Pro 14" M1 Pro, macOS 12.6.1
-Monterey, Dotnet 6.0.11.
+This project originally provided the components to run Opensim
+native on arm64 while it was a new
+development. Parts of this project have since been merged
+into the Opensim master repository, so fewer steps are now required outside
+the standard installation.
+This document will be updated as more becomes
+merged into the Opensim repository.
 
-These instructions and files are likely to change as they become merged into the
-main distribution. I will update this project as needed. Eventually this project
-will be superceded.
+I am providing two static libraries in this repository for two
+alternate versions of the Bullet physics engine for Opensim on arm64.
+Version 2.86 is the one that ships with
+Opensim's master distribution. Version 3.25 is a more recent release and can be 
+used as an experimental physics engine with Opensim. 
+These were built with the process detailed in a later section.
 
-The static libraries that were previously included in this repository have been
-added to the main distribution, so they are no longer needed here and have been removed..
+To install,
+first rename or back up the file currently at /bin/lib64/libBulletSim-arm64.dylib, then
+copy and rename the new file to that location.
+
+We are trying to get more people to test and validate this. If you are successful,
+please let us know!
 
 This work is licensed under Creative Commons BY-NC-SA 3.0:
 https://creativecommons.org/licenses/by-nc-sa/3.0/
 
 -------------
-**Required Prerequisites**
+**Required Prerequisites to Run Opensim**
 
 An Apple computer with an M1 or M2 chip. Currently the entire line of Apple Macs
 are using these.
@@ -107,13 +119,11 @@ Once the config files are set up, you arr ready to start the server:
 -------------
 **To build arm64 libraries from source**
 
-For reference I am including the steps to build the three shared library files
-now included in the distribution. Should there be a need to recompile a
-physics engine or openjpeg library for the Apple arm64 platform these steps
-can be used. There is also an opportunity to build a more recent version of the
-Bullet physics engine using the steps provided. 
+The instructions that follow aren't really needed by anyone unless you want
+to build the libraries yourself for some reason. They are included here
+for reference.
 
-You will need to have a shell environment with a complete set of environment 
+You will need to have a shell environment with environment 
 variables appropriately set for the development work. Bash (Bourne-again shell)
 is the preferred shell when working with older unmanaged software.
 
@@ -122,10 +132,10 @@ Open the Users
 and Groups preference pane. Right-click on your username and select Advanced Options.
 This opens a window where you can change your default shell to /bin/bash. 
 
-The steps involving compiling code (cmake or make) will throw errors if you do not
-set your PATH and related environment variables. I am providing a sample
+I am providing a sample
 bashrc file which is a good replacement for the default that Apple provides.
-This includes enviroinment paths for a mix of
+This includes shell environment paths for an arm64 macOS system that
+typically has mix of
 installed tools/libraries from Brew (in /opt/homebrew) and from independently
 installed packages like Mysql (in /usr/local). 
 
@@ -182,7 +192,7 @@ Then build and install the shared library:
 **Installing Bullet** 
 
 Installation is done in 2 steps. First, compile a Bullet distribution and
-install .a and include files into a temporary directory. Then, compile the
+install library archive files and include files into a temporary directory. Then, compile the
 "Bullet Glue" which packages the Bullet libraries, along with connector
 libraries, into a single static library.
 
