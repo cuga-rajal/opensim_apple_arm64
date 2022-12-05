@@ -238,9 +238,11 @@ This installs
 
 Note that if you are trying to build a fat binary, change the above cmake command
 by replacing
+
 	-DCMAKE\_CXX\_FLAGS="-fPIC"
 	
 with
+
 	-DCMAKE_CXX_FLAGS="-fPIC -arch arm64 -arch x86_64"
 
 
