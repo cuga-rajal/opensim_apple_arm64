@@ -1,0 +1,163 @@
+diff -crB BulletSim/API2.cpp BulletSimNEW/API2.cpp
+*** BulletSim/API2.cpp	2022-12-04 23:26:32.000000000 -0800
+--- BulletSimNEW/API2.cpp	2022-12-03 22:54:20.000000000 -0800
+***************
+*** 599,605 ****
+  	}
+  
+  	// Remove from special collision objects. A NOOP if not in the list.
+! 	IDTYPE id = CONVLOCALID(obj->getUserPointer());
+  	sim->getWorldData()->specialCollisionObjects.erase(id);
+  
+  	// finally make the object itself go away
+--- 599,605 ----
+  	}
+  
+  	// Remove from special collision objects. A NOOP if not in the list.
+! 	IDTYPE id = CONVLOCALID((size_t)obj->getUserPointer());
+  	sim->getWorldData()->specialCollisionObjects.erase(id);
+  
+  	// finally make the object itself go away
+***************
+*** 2775,2781 ****
+  EXTERN_C DLL_EXPORT void DumpRigidBody2(BulletSim* sim, btCollisionObject* obj)
+  {
+  	sim->getWorldData()->BSLog("DumpRigidBody: id=%u, loc=%x, pos=<%f,%f,%f>, orient=<%f,%f,%f,%f>",
+! 				CONVLOCALID(obj->getUserPointer()),
+  				obj,
+  				(float)obj->getWorldTransform().getOrigin().getX(),
+  				(float)obj->getWorldTransform().getOrigin().getY(),
+--- 2775,2781 ----
+  EXTERN_C DLL_EXPORT void DumpRigidBody2(BulletSim* sim, btCollisionObject* obj)
+  {
+  	sim->getWorldData()->BSLog("DumpRigidBody: id=%u, loc=%x, pos=<%f,%f,%f>, orient=<%f,%f,%f,%f>",
+! 				CONVLOCALID((size_t)obj->getUserPointer()),
+  				obj,
+  				(float)obj->getWorldTransform().getOrigin().getX(),
+  				(float)obj->getWorldTransform().getOrigin().getY(),
+***************
+*** 2912,2918 ****
+  	}
+  	sim->getWorldData()->BSLog("DumpCollisionShape: type=%s, id=%u, loc=%x, margin=%f, isMoving=%s, isConvex=%s",
+  			shapeTypeName,
+! 			CONVLOCALID(shape->getUserPointer()),
+  			shape,
+  			(float)shape->getMargin(),
+  			shape->isNonMoving() ? "true" : "false",
+--- 2912,2918 ----
+  	}
+  	sim->getWorldData()->BSLog("DumpCollisionShape: type=%s, id=%u, loc=%x, margin=%f, isMoving=%s, isConvex=%s",
+  			shapeTypeName,
+! 			CONVLOCALID((size_t)shape->getUserPointer()),
+  			shape,
+  			(float)shape->getMargin(),
+  			shape->isNonMoving() ? "true" : "false",
+***************
+*** 3064,3070 ****
+  	{
+  		btCollisionObject* obj = collisionObjects[ii];
+  		// If there is an object and it probably is not terrain, dump.
+! 		if (obj && (CONVLOCALID(obj->getUserPointer()) > 100))
+  		{
+  			sim->getWorldData()->BSLog("===========================================");
+  			DumpRigidBody2(sim, obj);
+--- 3064,3070 ----
+  	{
+  		btCollisionObject* obj = collisionObjects[ii];
+  		// If there is an object and it probably is not terrain, dump.
+! 		if (obj && (CONVLOCALID((size_t)obj->getUserPointer()) > 100))
+  		{
+  			sim->getWorldData()->BSLog("===========================================");
+  			DumpRigidBody2(sim, obj);
+diff -crB BulletSim/BulletSim.cpp BulletSimNEW/BulletSim.cpp
+*** BulletSim/BulletSim.cpp	2022-12-04 23:26:32.000000000 -0800
+--- BulletSimNEW/BulletSim.cpp	2022-12-03 22:54:22.000000000 -0800
+***************
+*** 403,410 ****
+  	}
+  
+  	// Get the IDs of colliding objects (stored in the one user definable field)
+! 	IDTYPE idA = CONVLOCALID(objA->getUserPointer());
+! 	IDTYPE idB = CONVLOCALID(objB->getUserPointer());
+  
+  	// Make sure idA is the lower ID so we don't record both 'A hit B' and 'B hit A'
+  	if (idA > idB)
+--- 403,410 ----
+  	}
+  
+  	// Get the IDs of colliding objects (stored in the one user definable field)
+! 	IDTYPE idA = CONVLOCALID((size_t)objA->getUserPointer());
+! 	IDTYPE idB = CONVLOCALID((size_t)objB->getUserPointer());
+  
+  	// Make sure idA is the lower ID so we don't record both 'A hit B' and 'B hit A'
+  	if (idA > idB)
+***************
+*** 1137,1143 ****
+  	m_worldData.dynamicsWorld->rayTest(from, to, hitResult);
+  	if (hitResult.hasHit())
+  	{
+! 		hit.ID = CONVLOCALID(hitResult.m_collisionObject->getUserPointer());
+  		hit.Fraction = hitResult.m_closestHitFraction;
+  		hit.Normal = hitResult.m_hitNormalWorld;
+  		hit.Point = hitResult.m_hitPointWorld;
+--- 1137,1143 ----
+  	m_worldData.dynamicsWorld->rayTest(from, to, hitResult);
+  	if (hitResult.hasHit())
+  	{
+! 		hit.ID = CONVLOCALID((size_t)hitResult.m_collisionObject->getUserPointer());
+  		hit.Fraction = hitResult.m_closestHitFraction;
+  		hit.Normal = hitResult.m_hitNormalWorld;
+  		hit.Point = hitResult.m_hitPointWorld;
+diff -crB BulletSim/Makefile BulletSimNEW/Makefile
+*** BulletSim/Makefile	2022-12-04 23:26:32.000000000 -0800
+--- BulletSimNEW/Makefile	2022-12-04 22:46:13.000000000 -0800
+***************
+*** 2,9 ****
+  
+  # IDIR = /usr/local/include/bullet
+  # LDIR = /usr/local/lib
+! IDIR = ./include
+! LDIR = ./lib
+  
+  # the Bullet libraries are linked statically so we don't have to also distribute the shared binaries
+  BULLETLIBS = $(LDIR)/libBulletDynamics.a $(LDIR)/libBulletCollision.a $(LDIR)/libLinearMath.a $(LDIR)/libHACD.a
+--- 2,9 ----
+  
+  # IDIR = /usr/local/include/bullet
+  # LDIR = /usr/local/lib
+! IDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/include/bullet
+! LDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/lib
+  
+  # the Bullet libraries are linked statically so we don't have to also distribute the shared binaries
+  BULLETLIBS = $(LDIR)/libBulletDynamics.a $(LDIR)/libBulletCollision.a $(LDIR)/libLinearMath.a $(LDIR)/libHACD.a
+***************
+*** 33,46 ****
+  # OSX build. Builds 32bit dylib on 64bit system. (Need 32bit because Mono is 32bit only).
+  ifeq ($(UNAME), Darwin)
+  TARGET = libBulletSim.dylib
+! # CC = clang
+! # LD = clang
+  #CFLAGS = -m32 -I$(IDIR) -fPIC -g
+  #LFLAGS = -m32 -dynamiclib -Wl -o $(TARGET)
+  #CFLAGS = -m32 -arch i386 -stdlib=libstdc++ -mmacosx-version-min=10.6 -I$(IDIR) -g 
+  #LFLAGS = -v -m32 -arch i386 -std=c++11 -stdlib=libstdc++ -mmacosx-version-min=10.6 -dynamic -o $(TARGET)
+! CFLAGS = -arch i386 -arch x86_64 -std=c++11  -O3 -I$(IDIR) -g 
+! LFLAGS = -v -dynamiclib -arch i386 -arch x86_64 -o $(TARGET)
+  endif
+  
+  BASEFILES = API2.cpp BulletSim.cpp
+--- 33,48 ----
+  # OSX build. Builds 32bit dylib on 64bit system. (Need 32bit because Mono is 32bit only).
+  ifeq ($(UNAME), Darwin)
+  TARGET = libBulletSim.dylib
+! CC = gcc
+! LD = g++
+  #CFLAGS = -m32 -I$(IDIR) -fPIC -g
+  #LFLAGS = -m32 -dynamiclib -Wl -o $(TARGET)
+  #CFLAGS = -m32 -arch i386 -stdlib=libstdc++ -mmacosx-version-min=10.6 -I$(IDIR) -g 
+  #LFLAGS = -v -m32 -arch i386 -std=c++11 -stdlib=libstdc++ -mmacosx-version-min=10.6 -dynamic -o $(TARGET)
+! CFLAGS = -arch arm64 -fPIC -O2 -I$(IDIR) -g 
+! LFLAGS = -v -dynamiclib -arch arm64 -o $(TARGET)
+  endif
+  
+  BASEFILES = API2.cpp BulletSim.cpp

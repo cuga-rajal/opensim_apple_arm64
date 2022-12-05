@@ -2,31 +2,35 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v1.2 / 1 December 2022
+v1.3 / 5 December 2022
 
 This project provides instructions and files to run Opensimulator server software
 (http://opensimulator.org) fully native on an Apple Mac computer with an
 Apple Silicon chip, and to install a more recent version of the Bullet physics
 engine on that system.
 
-This project originally provided the components to run Opensim
-native on arm64 while it was a new
-development. Parts of this project have since been merged
-into the Opensim master repository, so fewer steps are now required outside
-the standard installation.
-This document will be updated as more becomes
-merged into the Opensim repository.
+Portions of this project have been merged into the Opensim master repository.
+The following files in this repository are the latest versions
+to be mirrored in the Opensim repository:
+  - libBulletSim-2.86.1-arm64.dylib
+  - libopenjpeg-arm64.dylib
+  - libubode-arm64.dylib
 
-I am providing two static libraries in this repository for two
-alternate versions of the Bullet physics engine for Opensim on arm64.
-Version 2.86 is the one that ships with
-Opensim's master distribution. Version 3.25 is a more recent release and can be 
-used as an experimental physics engine with Opensim. 
-These were built with the process detailed in a later section.
+These are now code-signed with Apple. These were built with the process detailed in a later section.
+
+I am also providing an experimental static library for a much more recent version
+of Bullet for arm64, Bullet version 3.25, which is their latest in trunk from 
+https://github.com/bulletphysics/bullet3. This is libBulletSim-3.25-arm64.dylib.
+It is code signed, but experimental.
 
 To install,
 first rename or back up the file currently at /bin/lib64/libBulletSim-arm64.dylib, then
 copy and rename the new file to that location.
+
+There are also some experimental files in this repository that are fat binaries
+containing both arm64 and x86_64 architectures. These are candidates to potentially
+replace the current fat binaries in the Opensim repository that are 32/64 bit Intel
+for MacOS. These experimental fat binaries are also code-signed with Apple.
 
 We are trying to get more people to test and validate this. If you are successful,
 please let us know!
@@ -167,15 +171,19 @@ Go to Downloads -> Download Repository. Download and unpack.
 
 	cd opensimulator-libopenmetaverse-*/openjpeg-dotnet
 	
-Download the file _Makefile.osx.diff_ from this repository and place it in this directory.
+Download the file _openjpeg-mac-arm64.patch_ from this repository and place it in this directory.
+This is required for the arm64 architecture or for a fat binary containing that.
 Apply it with the following:
 
-	patch Makefile.osx Makefile.osx.diff
+	patch -p1 < openjpeg-mac-arm64.patch
 
 Then build and install the shared library:	
 
 	make -f Makefile.osx
 	cp -f libopenjpeg-dotnet-2-1.5.0-dotnet-1.dylib /path/to/opensim/bin/lib64/libopenjpeg-dotnet-arm64.dylib
+
+Please note this will work on your system but it will need to be code signed before it will
+work on other macOS systems.
 
 -------------
 **Installing ubODE**
@@ -187,6 +195,9 @@ Then build and install the shared library:
 	./configure --enable-shared --enable-double-precision 
 	make
 	cp -f ode/src/.libs/libubode.5.dylib /path/to/opensim/bin/lib64/libubode-arm64.dylib
+
+Please note this will work on your system but it will need to be code signed before it will
+work on other macOS systems.
 	
 -------------
 **Installing Bullet** 
@@ -200,9 +211,19 @@ The version of Bullet currently in opensim-libs repository is 2.74, however, thi
 build on an Apple M1. A more recent version, 2.86, does build and install and
 appears to work fine with Opensim.
 
-Download the tarball for Bullet 2.86 from
+Download and unpack the tarball for Bullet 2.86 from
 	https://codeload.github.com/bulletphysics/bullet3/tar.gz/2.86.1
-	
+
+This version of Bullet builds for arm64 without code patches, but requires a patch to support
+x86\_64 architecture or a fat binary containing that. If you are building a fat binary or x86\_64, 
+download the file _bullet-2.86-mac-arm64-x86\_64.patch_ from this repository and place it in this directory.
+Apply it with the following:
+
+	patch -p1 < bullet-2.86-mac-arm64-x86_64.patch
+
+Then build and install the shared library:	
+
+
 	brew install cmake
 	cd bullet3-2.86.1
 	mkdir bullet-build
@@ -215,14 +236,29 @@ This installs
   - Bullet .a files to bullet3-2.86.1/bullet-build/install/lib
   - Bullet includes into bullet3-2.86.1/bullet-build/install/include/bullet
 
+Note that if you are trying to build a fat binary, change the above cmake command
+by replacing
+	-DCMAKE\_CXX\_FLAGS="-fPIC"
+	
+with
+	-DCMAKE_CXX_FLAGS="-fPIC -arch arm64 -arch x86_64"
+
+
+
 Step 2 requires building the Bullet glue:
 
 	cd /path/to/opensim-libs/trunk/unmanaged/BulletSim/
 
-Download the file _BulletSim.diff_ from this repository and place it in this directory.
+A patch must be applied to build this on arm64 or on a fat binary containing arm64.
+
+Download the file _bulletsim-glue-mac-arm64-x86\_64.patch_ from this repository and place it in this directory.
+This patch file contains changes for building for the arm64 architecture only. If you
+want to build a fat binary, replace any occurrence of "-arch arm64" with 
+"-arch arm64 -arch x86_64".
+
 Apply the patch with the following:
 
-	patch -p0 < BulletSim.diff
+	patch -p1 < bulletsim-glue-mac-arm64-x86_64.patch
 
 Edit the Makefile and set IDIR and LDIR to the path for your .a and include files for Bullet.
 
@@ -234,13 +270,14 @@ Then build and install:
 	make
 	cp -f libBulletSim.dylib /path/to/opensim/bin/lib64/libBulletSim-arm64.dylib
 
-On my system, the same process works for Bullet 3.24 (stable) although I have not tested
-to see if there are problems or advantages with that version.
+Please note this will work on your system but it will need to be code signed before it will
+work on other macOS systems.
+
+On my system, the same process works for Bullet 3.24 (stable) or 3.25, although I have not tested
+thoroughly to see if there are problems or advantages with those versions.
 
 
 -------------
-
-If you like this project, please give me a star. 
 
 Please notify me of any bugs or feature requests.
 

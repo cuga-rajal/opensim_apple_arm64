@@ -1,0 +1,38 @@
+Only in openjpeg-dotnetNEW: .DS_Store
+diff -crB openjpeg-dotnet/Makefile.osx openjpeg-dotnetNEW/Makefile.osx
+*** openjpeg-dotnet/Makefile.osx	2022-09-22 13:15:49.000000000 -0700
+--- openjpeg-dotnetNEW/Makefile.osx	2022-12-04 22:52:41.000000000 -0800
+***************
+*** 14,20 ****
+  LIBTOOLDYN = g++
+  
+  
+! COMPILERFLAGS = -O3 -fPIC -m32
+  
+  MODULES = $(SRCS:.c=.o)
+  CPPMODULES = $(CPPSRCS:.cpp=.o)
+--- 14,20 ----
+  LIBTOOLDYN = g++
+  
+  
+! COMPILERFLAGS = -O3 -fPIC -arch arm64 -dynamic
+  
+  MODULES = $(SRCS:.c=.o)
+  CPPMODULES = $(CPPSRCS:.cpp=.o)
+***************
+*** 51,57 ****
+  	$(CC) $(CFLAGS) -c $< -o $@
+  
+  $(SHAREDLIB): $(MODULES) $(CPPMODULES)
+! 	$(LIBTOOLDYN) -m32 -dynamiclib -o $@ $(MODULES) $(CPPMODULES) $(LIBRARIES)
+  
+  
+  
+--- 51,57 ----
+  	$(CC) $(CFLAGS) -c $< -o $@
+  
+  $(SHAREDLIB): $(MODULES) $(CPPMODULES)
+! 	$(LIBTOOLDYN) -dynamiclib -arch arm64 -o $@ $(MODULES) $(CPPMODULES) $(LIBRARIES)
+  
+  
+  

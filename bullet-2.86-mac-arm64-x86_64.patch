@@ -1,0 +1,40 @@
+diff -crB bullet3-2.86.1/src/Bullet3Common/b3Vector3.h bullet3-2.86.1new/src/Bullet3Common/b3Vector3.h
+*** bullet3-2.86.1/src/Bullet3Common/b3Vector3.h	2017-02-17 15:43:38.000000000 -0800
+--- bullet3-2.86.1new/src/Bullet3Common/b3Vector3.h	2022-12-04 21:49:54.000000000 -0800
+***************
+*** 39,45 ****
+  #endif
+  
+  
+! #define B3_SHUFFLE(x,y,z,w) ((w)<<6 | (z)<<4 | (y)<<2 | (x))
+  //#define b3_pshufd_ps( _a, _mask ) (__m128) _mm_shuffle_epi32((__m128i)(_a), (_mask) )
+  #define b3_pshufd_ps( _a, _mask ) _mm_shuffle_ps((_a), (_a), (_mask) )
+  #define b3_splat3_ps( _a, _i ) b3_pshufd_ps((_a), B3_SHUFFLE(_i,_i,_i, 3) )
+--- 39,45 ----
+  #endif
+  
+  
+! #define B3_SHUFFLE(x, y, z, w) (((w) << 6 | (z) << 4 | (y) << 2 | (x)) & 0xff)
+  //#define b3_pshufd_ps( _a, _mask ) (__m128) _mm_shuffle_epi32((__m128i)(_a), (_mask) )
+  #define b3_pshufd_ps( _a, _mask ) _mm_shuffle_ps((_a), (_a), (_mask) )
+  #define b3_splat3_ps( _a, _i ) b3_pshufd_ps((_a), B3_SHUFFLE(_i,_i,_i, 3) )
+diff -crB bullet3-2.86.1/src/LinearMath/btVector3.h bullet3-2.86.1new/src/LinearMath/btVector3.h
+*** bullet3-2.86.1/src/LinearMath/btVector3.h	2017-02-17 15:43:38.000000000 -0800
+--- bullet3-2.86.1new/src/LinearMath/btVector3.h	2022-12-04 21:46:59.000000000 -0800
+***************
+*** 39,45 ****
+  #endif
+  
+  
+! #define BT_SHUFFLE(x,y,z,w) ((w)<<6 | (z)<<4 | (y)<<2 | (x))
+  //#define bt_pshufd_ps( _a, _mask ) (__m128) _mm_shuffle_epi32((__m128i)(_a), (_mask) )
+  #define bt_pshufd_ps( _a, _mask ) _mm_shuffle_ps((_a), (_a), (_mask) )
+  #define bt_splat3_ps( _a, _i ) bt_pshufd_ps((_a), BT_SHUFFLE(_i,_i,_i, 3) )
+--- 39,45 ----
+  #endif
+  
+  
+! #define BT_SHUFFLE(x, y, z, w) (((w) << 6 | (z) << 4 | (y) << 2 | (x)) & 0xff)
+  //#define bt_pshufd_ps( _a, _mask ) (__m128) _mm_shuffle_epi32((__m128i)(_a), (_mask) )
+  #define bt_pshufd_ps( _a, _mask ) _mm_shuffle_ps((_a), (_a), (_mask) )
+  #define bt_splat3_ps( _a, _i ) bt_pshufd_ps((_a), BT_SHUFFLE(_i,_i,_i, 3) )
