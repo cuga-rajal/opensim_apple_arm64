@@ -11,29 +11,39 @@ engine on that system.
 
 Portions of this project have been merged into the Opensim master repository.
 The following files in this repository are the latest versions
-to be mirrored in the Opensim repository:
+and mirrored in the Opensim repository:
   - libBulletSim-2.86.1-arm64.dylib
   - libopenjpeg-arm64.dylib
   - libubode-arm64.dylib
 
-These are now code-signed with Apple. These were built with the process detailed in a later section.
+These are code-signed with Apple and were built with the process detailed in a later section.
+
+The repository also has "universal" versions with both arm64 and x86_64 architectures embedded
+in a single file. These are code-signed and functionally equivalent, but are not currently used
+in the Opensim master repository.
+  - libBulletSim-2.86.1-arm64-x86\_64.dylib
+  - libopenjpeg-arm64-x86\_64.dylib
 
 I am also providing an experimental static library for a much more recent version
-of Bullet for arm64, Bullet version 3.25, which is their latest in trunk from 
-https://github.com/bulletphysics/bullet3. This is libBulletSim-3.25-arm64.dylib.
-It is code signed, but experimental.
+of Bullet on arm64, Bullet version 3.25, which is their latest in trunk from 
+https://github.com/bulletphysics/bullet3. This is code signed, but experimental.
+  - libBulletSim-3.25-arm64.dylib
 
 To install,
-first rename or back up the file currently at /bin/lib64/libBulletSim-arm64.dylib, then
-copy and rename the new file to that location.
+first place the file in opensim/bin/lib64/. Back up an original copy of the file
+	/bin/OpenSim.Region.PhysicsModule.BulletS.dll.config
 
-There are also some experimental files in this repository that are fat binaries
-containing both arm64 and x86_64 architectures. These are candidates to potentially
-replace the current fat binaries in the Opensim repository that are 32/64 bit Intel
-for MacOS. These experimental fat binaries are also code-signed with Apple.
+then edit that file to point
+to the new dylib file by changing the line:
 
-We are trying to get more people to test and validate this. If you are successful,
-please let us know!
+	<dllmap os="osx" cpu="arm64" dll="BulletSim" target="lib64/libBulletSim-2.86.1-arm64.dylib" />
+
+to:
+
+	<dllmap os="osx" cpu="arm64" dll="BulletSim" target="lib64/libBulletSim-3.25-arm64.dylib" />
+
+We are trying to get more feedback from people who are testing this. Please let us know
+about your successes or issues!
 
 This work is licensed under Creative Commons BY-NC-SA 3.0:
 https://creativecommons.org/licenses/by-nc-sa/3.0/
@@ -275,8 +285,8 @@ Then build and install:
 Please note this will work on your system but it will need to be code signed before it will
 work on other macOS systems.
 
-On my system, the same process works for Bullet 3.24 (stable) or 3.25, although I have not tested
-thoroughly to see if there are problems or advantages with those versions.
+On my system, the same process works for Bullet 3.24 (stable) or 3.25, although I have not 
+done any extensive in-world testing on the new versions.
 
 
 -------------
