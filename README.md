@@ -125,7 +125,7 @@ If you are new to opensim, config file requirements are explained in BUILDING.md
 -------------
 **Start Up Opensim, the Dotnet Way**
 
-Once the config files are set up, you arr ready to start the server:
+Once the config files are set up, you are ready to start the server:
 
 	cd /path/to/opensim/bin; ./opensim.sh
 
@@ -133,7 +133,7 @@ Once the config files are set up, you arr ready to start the server:
 -------------
 **To build arm64 libraries from source**
 
-The instructions that follow aren't really needed by anyone unless you want
+The instructions that follow aren't really needed unless you want
 to build the libraries yourself for some reason. They are included here
 for reference.
 
@@ -146,11 +146,10 @@ Open the Users
 and Groups preference pane. Right-click on your username and select Advanced Options.
 This opens a window where you can change your default shell to /bin/bash. 
 
-I am providing a sample
+I am including in this repository  a sample
 bashrc file which is a good replacement for the default that Apple provides.
-This includes shell environment paths for an arm64 macOS system that
-typically has mix of
-installed tools/libraries from Brew (in /opt/homebrew) and from independently
+This has a confirguration that merges paths for
+installed apps and libs from Brew (in /opt/homebrew) and from independently
 installed packages like Mysql (in /usr/local). 
 
 To install this, back up or rename the file at /private/etc/bashrc, then
@@ -162,10 +161,12 @@ to a terminal window already open, you can apply the changes by typing:
 
 	source /etc/bashrc
 
-Next you will need to install the latest Xcode Command Line Tools which is
-provided free by Apple. As of this writing the Xcode Command Line Tools version
-is 14.1. You may need to sign a developer license with Apple to access the
-installer.
+On most systems, installing Brew will also trigger the installation of
+Apple's "Command Line Developer Tools". If for some reason it was not installed, 
+that needs to be installed at this time. There is no harm if you re-install it. 
+You can install it by typing thefollowing at the command line:
+
+	xcode-select --install
 
 Download the repository for opensim-libs, which contains projects needed for the
 physics engines. 
@@ -182,7 +183,7 @@ Go to Downloads -> Download Repository. Download and unpack.
 	cd opensimulator-libopenmetaverse-*/openjpeg-dotnet
 	
 Download the file _openjpeg-mac-arm64.patch_ from this repository and place it in this directory.
-This is required for the arm64 architecture or for a fat binary containing that.
+This is required for the arm64 architecture or for a universal binary containing that.
 Apply it with the following:
 
 	patch -p1 < openjpeg-mac-arm64.patch
@@ -212,8 +213,12 @@ work on other macOS systems.
 -------------
 **Installing Bullet** 
 
-Installation is done in 2 steps. First, compile a Bullet distribution and
-install library archive files and include files into a temporary directory. Then, compile the
+Buiulding Bullet requires cmake. If not already installed, install it with brew:
+
+	brew install cmake
+	
+Bullet installation is done in 2 steps. First, compile a Bullet distribution and
+install library archive files (.a) and include files into temporary directories. Then, compile the
 "Bullet Glue" which packages the Bullet libraries, along with connector
 libraries, into a single static library.
 
@@ -225,7 +230,7 @@ Download and unpack the tarball for Bullet 2.86 from
 	https://codeload.github.com/bulletphysics/bullet3/tar.gz/2.86.1
 
 This version of Bullet builds for arm64 without code patches, but requires a patch to support
-x86\_64 architecture or a fat binary containing that. If you are building a fat binary or x86\_64, 
+x86\_64 architecture or a universal binary containing that. If you are building a universal binary or x86\_64, 
 download the file _bullet-2.86-mac-arm64-x86\_64.patch_ from this repository and place it in this directory.
 Apply it with the following:
 
@@ -233,8 +238,6 @@ Apply it with the following:
 
 Then build and install the shared library:	
 
-
-	brew install cmake
 	cd bullet3-2.86.1
 	mkdir bullet-build
 	cd bullet-build
@@ -246,7 +249,7 @@ This installs
   - Bullet .a files to bullet3-2.86.1/bullet-build/install/lib
   - Bullet includes into bullet3-2.86.1/bullet-build/install/include/bullet
 
-Note that if you are trying to build a fat binary, change the above cmake command
+Note that if you are trying to build a universal binary, change the above cmake command
 by replacing
 
 	-DCMAKE\_CXX\_FLAGS="-fPIC"
@@ -261,12 +264,10 @@ Step 2 requires building the Bullet glue:
 
 	cd /path/to/opensim-libs/trunk/unmanaged/BulletSim/
 
-A patch must be applied to build this on arm64 or on a fat binary containing arm64.
+A patch must be applied to build this on arm64 or on a universal binary containing arm64.
 
 Download the file _bulletsim-glue-mac-arm64-x86\_64.patch_ from this repository and place it in this directory.
-This patch file contains changes for building for the arm64 architecture only. If you
-want to build a fat binary, replace any occurrence of "-arch arm64" with 
-"-arch arm64 -arch x86_64".
+This patch file contains changes for building for the arm64 architecture only.
 
 Apply the patch with the following:
 
@@ -276,6 +277,9 @@ Edit the Makefile and set IDIR and LDIR to the path for your .a and include file
 
 	LDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/lib
 	IDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/include/bullet
+
+If you want to build a universal binary, also replace any occurrence of "-arch arm64" with 
+"-arch arm64 -arch x86_64".
 
 Then build and install:
 
