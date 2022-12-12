@@ -164,7 +164,7 @@ to a terminal window already open, you can apply the changes by typing:
 On most systems, installing Brew will also trigger the installation of
 Apple's "Command Line Developer Tools". If for some reason it was not installed, 
 that needs to be installed at this time. There is no harm if you re-install it. 
-You can install it by typing thefollowing at the command line:
+You can install it by typing the following at the command line:
 
 	xcode-select --install
 
@@ -213,7 +213,7 @@ work on other macOS systems.
 -------------
 **Installing Bullet** 
 
-Buiulding Bullet requires cmake. If not already installed, install it with brew:
+Building Bullet requires cmake. If not already installed, install it with brew:
 
 	brew install cmake
 	
