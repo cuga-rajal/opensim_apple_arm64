@@ -42,10 +42,10 @@ This library is also a universal binary with arm64 and x86_64 architectures.
 
 Misterblue and I are developing an update to Bullet libraries across all the platforms, 
 based on the Bullet build process and patches I developed, along with
-Misterblue's patches and the latest version of Bullet, 3.25. The plan is to
-Some in-world testing areas will need to be set up and some testing completed
+Misterblue's patches and the latest version of Bullet, 3.25.
+In-world testing areas will need to be set up and some testing done
 before updating Bullet in
-the Opensim repository. We will also need some testers to try them on their
+the Opensim repository. We will need some testers to try them on their
 own simulators.
 
 The following is an experimental version of Bullet that is a release candidate
