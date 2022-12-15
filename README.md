@@ -67,12 +67,14 @@ to:
 	<dllmap os="osx" cpu="arm64" dll="BulletSim" target="lib64/libBulletSim-3.25-20221213-universal.dylib" />
 
 And lastly, there is another experimental version of Bullet 3.25, the same as the one
-above but with the Bullet sleep feature disabled. This effectively replaces the 0001 patch
-and disables the switching between object sleep and wake states. In my testing I have found
-that this change resolves some long standing bugs with a few physics applications. The change
+above but with the Bullet sleep feature disabled using the patch _Bullet-disable-sleeping.patch_
+from this repository. This replaces the 0001 patch and effectively 
+disables the switching between object sleep and wake states. In my testing I have found
+that this change resolves some long standing bugs with a few physics applications in Opensim. The change
 may have the effect of using more CPU on physics-enabled objects.
   - libBulletSim-3.25-20221215-universal-NOSLEEP.dylib
 
+The patch for that change is 
 We are trying to get more feedback from people who are testing this. Please let us know
 about your successes or issues!
 
