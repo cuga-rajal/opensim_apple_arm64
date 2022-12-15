@@ -2,32 +2,56 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v1.3 / 5 December 2022
+v1.4 / 15 December 2022
 
 This project provides instructions and files to run Opensimulator server software
 (http://opensimulator.org) fully native on an Apple Mac computer with an
 Apple Silicon chip, and to install a more recent version of the Bullet physics
 engine on that system.
 
+If you just want instructions to run Opensim native on an Apple Silicon Mac,
+you can skip down to the General Requirements section.
+
+This project is in active development and this page will change as the project evolves.
+
 Portions of this project have been merged into the Opensim master repository.
-The following files in this repository are the latest versions
-and mirrored in the Opensim repository:
+The following files in this repository mirror the latest versions
+in the Opensim repository:
   - libBulletSim-2.86.1-arm64.dylib
   - libopenjpeg-arm64.dylib
   - libubode-arm64.dylib
 
 These are code-signed with Apple and were built with the process detailed in a later section.
 
-The repository also has "universal" versions with both arm64 and x86_64 architectures embedded
-in a single file. These are code-signed and functionally equivalent, but are not currently used
-in the Opensim master repository.
-  - libBulletSim-2.86.1-arm64-x86\_64.dylib
-  - libopenjpeg-arm64-x86\_64.dylib
+I'm also providing universal binary versions of some of the .dylib libraries that
+include both arm64 and x86\_64 architectures,
+so a single library should work on all Macs with Intel x86\_64 or arm64 processors.
+The following universal library is functionally equivalent to the one listed above
+and is a candidate to replace the arm64-only library.
+  - libopenjpeg-universal.dylib
 
-I am also providing an experimental static library for a much more recent version
-of Bullet on arm64, Bullet version 3.25, which is their latest in trunk from 
-https://github.com/bulletphysics/bullet3. This is code signed, but experimental.
-  - libBulletSim-3.25-arm64.dylib
+The Bullet library is in active development after discussions with Misterblue on December 13.
+The following
+is a candidate to replace the macOS Bullet library listed above. It includes the
+[0001 patch](https://bitbucket.org/opensimulator/opensim-libs/src/master/trunk/unmanaged/BulletSim/0001-Call-setWorldTransform-when-object-is-going-inactive.patch)
+to resolve one of the Bullet bugs. Apparently, this patch was not included in the macOS 
+static libraries since at least 2019, so this version brings parity back to the Mac
+with Bullet libraries on other architectures.
+This library is also a universal binary with arm64 and x86_64 architectures.
+  - libBulletSim-2.86.1-20221213-universal.dylib
+
+Misterblue and I are developing an update to Bullet libraries across all the platforms, 
+based on the Bullet build process and patches I developed, along with
+Misterblue's patches and the latest version of Bullet, 3.25. The plan is to
+Some in-world testing areas will need to be set up and some testing completed
+before updating Bullet in
+the Opensim repository. We will also need some testers to try them on their
+own simulators.
+
+The following is an experimental version of Bullet that is a release candidate
+for the updated 3.25 version. It is a universal binary for macOS x86_64 and arm64,
+includes the two Bullet patches in this repository as well as the 0001 patch.
+  - libBulletSim-3.25-20221213-universal.dylib
 
 To install,
 first place the file in opensim/bin/lib64/. Back up an original copy of the file
@@ -40,7 +64,14 @@ to the new dylib file by changing the line:
 
 to:
 
-	<dllmap os="osx" cpu="arm64" dll="BulletSim" target="lib64/libBulletSim-3.25-arm64.dylib" />
+	<dllmap os="osx" cpu="arm64" dll="BulletSim" target="lib64/libBulletSim-3.25-20221213-universal.dylib" />
+
+And lastly, there is another experimental version of Bullet 3.25, the same as the one
+above but with the Bullet sleep feature disabled. This effectively replaces the 0001 patch
+and disables the switching between object sleep and wake states. In my testing I have found
+that this change resolves some long standing bugs with a few physics applications. The change
+may have the effect of using more CPU on physics-enabled objects.
+  - libBulletSim-3.25-20221215-universal-NOSLEEP.dylib
 
 We are trying to get more feedback from people who are testing this. Please let us know
 about your successes or issues!
@@ -49,7 +80,7 @@ This work is licensed under Creative Commons BY-NC-SA 3.0:
 https://creativecommons.org/licenses/by-nc-sa/3.0/
 
 -------------
-**Required Prerequisites to Run Opensim**
+**General Requirements to Run Opensim on Apple Silicon**
 
 An Apple computer with an M1 or M2 chip. Currently the entire line of Apple Macs
 are using these.
