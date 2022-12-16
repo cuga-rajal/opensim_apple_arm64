@@ -74,7 +74,6 @@ that this change resolves some long standing bugs with a few physics application
 may have the effect of using more CPU on physics-enabled objects.
   - libBulletSim-3.25-20221215-universal-NOSLEEP.dylib
 
-The patch for that change is 
 We are trying to get more feedback from people who are testing this. Please let us know
 about your successes or issues!
 
