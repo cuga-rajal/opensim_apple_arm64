@@ -9,10 +9,12 @@ This project provides instructions and files to run Opensimulator server softwar
 Apple Silicon chip, and to install a more recent version of the Bullet physics
 engine on that system.
 
+This project is in active development, and this page will be updated as the project evolves.
+
 If you just want instructions to run Opensim native on an Apple Silicon Mac,
 you can skip down to the General Requirements section. Running Opensim on 
-Apple Silicon no longer requires special libraries and patches that were previously
-posted here, as these have been merged with the main Opensim distribution.
+Apple Silicon no longer requires special libraries and instructions previously
+posted here as these have been merged into the Opensim distribution.
 
 The following files in this repository mirror the latest versions
 in the Opensim repository (dotnet6 branch):
@@ -30,8 +32,7 @@ a patch he developed.
 
 The Opensim project is migrating macOS libraries to a universal binary version that
 includes both arm64 and x86\_64 architectures. The new Bullet version listed above
-is a universal binary and should work on Mac x86\_64
-or arm64 processors. Other libraries listed above are for arm64 only
+is a universal binary. Other libraries listed above are for arm64 only
 until there is a reason to rebuild them. Opensim distribution includes additional libraries
 not from this repository, which support the other architecture.
 
@@ -42,15 +43,16 @@ distribution. The following is a candidate to replace the arm64-only library.
 Misterblue and I are working on a new version of Bullet libraries for all the platforms in Opensim, 
 based on the Bullet build process and patches I developed, along with
 Misterblue's patches and the latest version of Bullet, 3.25.
-We are also trying to fix a couple of bugs:
+The plan is to have the same version, patches, and feature parity across all platforms.
+We identified a couple of reproducible bugs that need looking into:
 
 1) Some of the console commands to change Bullet parameters do not appear to be taking hold
 
-2) Some physics objects that go into physics "sleep" state do not wake up properly
+2) Physics objects that go into physics "sleep" state do not wake up properly in some use cases
 
 As we develop new versions that are
 candidates to replace the current Bullet libs, in-world testing areas will need to be set up and
-some testing done. At some point after appropriate testing and discussions, and necessary changes,
+some testing done. At some point, after appropriate testing, discussions and fixes,
 we will update the Bullet libraries in Opensim trunk.
 
 The following is an experimental version of Bullet that is a release candidate
