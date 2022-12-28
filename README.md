@@ -66,11 +66,11 @@ first place the file in opensim/bin/lib64/. Back up an original copy of the file
 then edit that file to point
 to the new dylib file by changing the line:
 
-	<dllmap os="osx" cpu="arm64" dll="BulletSim" target="lib64/libBulletSim-2.86.1-arm64.dylib" />
+	<dllmap os="osx" dll="BulletSim" target="lib64/libBulletSim-2.86.1-20221213-universal.dylib" />
 
 to:
 
-	<dllmap os="osx" cpu="arm64" dll="BulletSim" target="lib64/libBulletSim-3.25-20221213-universal.dylib" />
+	<dllmap os="osx" dll="BulletSim" target="lib64/libBulletSim-3.25-20221213-universal.dylib" />
 
 And lastly, there is another experimental version of Bullet 3.25, the same as the one
 above but with the Bullet sleep feature disabled using the patch _Bullet-disable-sleeping.patch_
