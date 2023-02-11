@@ -14,8 +14,8 @@ This project is in active development, and this page will be updated as the proj
 *Apple Silicon*
 
 Instructions and files to run Opensim native on an Apple Silicon Mac have now been
-merged into the main Opensim distribution in the dotnet6 branch. For this you can skip down
-to the General Requirements section below for general information.
+merged into the main Opensim distribution in the dotnet6 branch. For general information
+you can skip down to the General Requirements section below .
 
 The following files in this repository mirror the latest versions
 in the Opensim repository (dotnet6 branch).
@@ -27,8 +27,8 @@ These are code-signed with Apple and were built with the process detailed in a l
 The Bullet library listed above is a universal binary
 compatible with both arm64 and x86\_64 architectures  for macOS.
 It includes a [patch](https://bitbucket.org/opensimulator/opensim-libs/src/master/trunk/unmanaged/BulletSim/0001-Call-setWorldTransform-when-object-is-going-inactive.patch)
-present other platforms but apparently had not been patched on the Mac version since 2019. 
-This brings functional parity with Bullet libraries on other platforms.
+that was missing on macOS but present other platforms since 2019. 
+This brings functional parity to macOS with Bullet libraries on other platforms.
 Thanks to Misterblue who was able to discuss the bugs and identify the observed bug with 
 a patch he developed.
 
@@ -76,6 +76,7 @@ don't yet resolve the bugs described above.
 
 To install,
 first place the file in opensim/bin/lib64/. Back up an original copy of the file
+	
 	/bin/OpenSim.Region.PhysicsModule.BulletS.dll.config
 
 then edit that file to point to the new dylib file.
@@ -97,13 +98,13 @@ to:
 	<dllmap os="!windows,osx" cpu="x86-64" dll="BulletSim" target="lib64/libBulletSim-3.25-x86_64-20230211.so" />
 
 
-And lastly, there is another experimental version of Bullet 3.25, the same as the one
+And lastly, I am providing an experimental version of Bullet 3.25, the same as the one
 above but with the Bullet sleep feature disabled using the patch _Bullet-disable-sleeping.patch_
 from this repository. This replaces the 0001 patch and effectively 
 disables the switching between object sleep and wake states.
 
 This is a hack
-and not the best way to accomplish shutting off the physics sleep feature. But it provides an 
+and not the best way to accomplish shutting off the physics sleep feature. But it is an 
 easy way to determine if an observed bug is related to the physics sleep feature.
 This hack resolves bugs for some use cases with "stuck" prims, but regresses the wandering-prim
 issue on other use cases. A cleaner long-term solution is needed.
