@@ -27,11 +27,11 @@ These are code-signed with Apple and were built with the process detailed in a l
   - libubode-arm64.dylib
 
 The Bullet library listed above is a universal binary
-compatible with both arm64 and x86\_64 architectures  for macOS.
+compatible with both arm64 and x86\_64 macOS architectures.
 It includes a [patch](https://bitbucket.org/opensimulator/opensim-libs/src/master/trunk/unmanaged/BulletSim/0001-Call-setWorldTransform-when-object-is-going-inactive.patch)
-that was missing on macOS but present other platforms since 2019. 
-This brings functional parity to macOS with Bullet libraries on other platforms.
-Thanks to Misterblue who was able to discuss the bugs and identify the observed bug with 
+that was missing on macOS since 2019, and now restored and merged with Opensim 
+main distribution as of January 2023.
+Thanks to Misterblue who was able to identify an observed bug with 
 a patch he developed.
 
 At some point Openjpeg will be migrated to a universal binary in the Opensim 
