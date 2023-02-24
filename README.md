@@ -2,7 +2,7 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v1.6 / 11 February 2023
+v1.7 / 23 February 2023
 
 This project provides instructions and files to run Opensimulator server software
 (http://opensimulator.org) on Apple Silicon (M1/M2) computers fully native,
@@ -14,7 +14,9 @@ This project is in active development, and this page will be updated as the proj
 *Apple Silicon*
 
 Instructions and files to run Opensim native on an Apple Silicon Mac have now been
-merged into the main Opensim distribution in the dotnet6 branch. For general information
+merged into the main Opensim distribution in the dotnet6 branch, but this page provides
+more detailed instructions.
+For general information on running Opensim on Apple Silicon
 you can skip down to the General Requirements section below .
 
 The following files in this repository mirror the latest versions
@@ -51,7 +53,7 @@ Misterblue is also working on a major update to the Bullet wrapper that Opensim 
 with the Bullet engine. This will report the actual Bullet version and will be
 mostly 64-bit clean so is likely to improve performance.
 
-We identified some reproducible bugs that need looking into:
+We identified some reproducible bugs that still need looking into:
 
 1) Some of the console commands to change Bullet parameters do not appear to be taking hold
 
@@ -297,22 +299,35 @@ The version of Bullet currently in opensim-libs repository is 2.74, however, thi
 build on an Apple M1. A more recent version, 2.86, does build and install and
 appears to work fine with Opensim.
 
-Download and unpack the tarball for Bullet 2.86 from
+Download and unpack the tarball for Bullet 2.86 (the current supported version in Opensim) from:
 	https://codeload.github.com/bulletphysics/bullet3/tar.gz/2.86.1
 
-This version of Bullet builds for arm64 without code patches, but requires a patch to support
-x86\_64 architecture or a universal binary containing that. If you are building a universal binary or x86\_64, 
-download the file _bullet-2.86-mac-arm64-x86\_64.patch_ from this repository and place it in this directory.
-Apply it with the following:
+Or, if you want to try the latest Bullet version 3.25, download a ZIP file from:
+	https://github.com/bulletphysics/bullet3
+
+Apply this [patch](https://bitbucket.org/opensimulator/opensim-libs/src/master/trunk/unmanaged/BulletSim/0001-Call-setWorldTransform-when-object-is-going-inactive.patch)
+provided by Misterblue to fix an issue involving wandering prims. This patch has been used on all the
+architectures of Bullet libraries in the Opensim distribution.
+
+Bullet version 2.86 also requires a patch if it is being compiled for macOS x86\_64 architecture
+or a universal binary containing x86\_64. This patch is not required for Bullet 3.25 as it is already applied. 
+The patch is provided in the file _bullet-2.86-mac-arm64-x86\_64.patch_ from this repository. 
+Place it in the top level directory and apply it with the following:
 
 	patch -p1 < bullet-2.86-mac-arm64-x86_64.patch
 
-Then build and install the shared library:	
+Then build and install the shared library.The same build process works for
+Bullet 2.86 or 3.25. At the terminal, change directory to the top level or your
+Bullet distriibution. Depending on your version this will be _bullet3-2.86.1_ or _bullet-master_.
+The following instructions describe steps using bullet3-2.86.1. 
+
+Note that the cmake command listed below merges flags needed for either Bullet version. You can use the
+same command for either version; flags not recognized will just be ignored.
 
 	cd bullet3-2.86.1
 	mkdir bullet-build
 	cd bullet-build
-	cmake .. -G "Unix Makefiles" -DBUILD_EXTRAS=ON -DBUILD_DEMOS=OFF -DBUILD_SHARED_LIBS=OFF -DINSTALL_LIBS=ON -DINSTALL_EXTRA_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-fPIC" -DCMAKE_INSTALL_PREFIX=./install
+	cmake .. -G "Unix Makefiles" -DBUILD_BULLET2_DEMOS=off -DBUILD_BULLET3=on -DBUILD_CLSOCKET=off -DBUILD_CPU_DEMOS=off -DBUILD_ENET=off -DBUILD_EXTRAS=on -DBUILD_DEMOS=off -DBUILD_OPENGL_DEMOS=off -DBUILD_PYBULLET=off -DBUILD_SHARED_LIBS=off -DBUILD_BULLET_ROBOTICS_GUI_EXTRA=off -DBUILD_BULLET_ROBOTICS_EXTRA=off -DBUILD_OPENGL3_DEMOS=off -DBUILD_UNIT_TESTS=off -DINSTALL_LIBS=ON -DINSTALL_EXTRA_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-fPIC -arch arm64 -arch x86_64" -DCMAKE_INSTALL_PREFIX=./install
 	make
 	make install
 
@@ -338,7 +353,7 @@ Step 2 requires building the Bullet glue:
 A patch must be applied to build this on arm64 or on a universal binary containing arm64.
 
 Download the file _bulletsim-glue-mac-arm64-x86\_64.patch_ from this repository and place it in this directory.
-This patch file contains changes for building for the arm64 architecture only.
+This patch file contains changes needed only for building the arm64 architecture.
 
 Apply the patch with the following:
 
@@ -359,9 +374,6 @@ Then build and install:
 
 Please note this will work on your system but it will need to be code signed before it will
 work on other macOS systems.
-
-On my system, the same process works for Bullet 3.24 (stable) or 3.25, although I have not 
-done any extensive in-world testing on the new versions.
 
 
 -------------
