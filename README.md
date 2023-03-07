@@ -2,7 +2,7 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v1.7 / 23 February 2023
+v1.8 / 7 March 2023
 
 This project provides instructions and files to run Opensimulator server software
 (http://opensimulator.org) on Apple Silicon (M1/M2) computers fully native,
@@ -58,9 +58,6 @@ We identified some reproducible bugs that still need looking into:
 1) Some of the console commands to change Bullet parameters do not appear to be taking hold
 
 2) Physics objects that go into physics "sleep" state do not wake up properly in some use cases
-
-3) One use case  - delinking regular prims from a linkset and making them physical - 
-causes a Bullet segfault, consistently across platforms, which should never happen.
 
 As we develop new test versions of Bullet libs, in-world testing areas will need to be set up and
 some testing done. At some point, after appropriate testing, discussions and fixes,
