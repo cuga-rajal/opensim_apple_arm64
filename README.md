@@ -1,4 +1,4 @@
-# opensim_macos_arm64
+# opensim_macOS_arm64
 
 Opensim Support for Apple Silicon M1/M2
 
@@ -27,7 +27,7 @@ libraries should be loaded for various CPU and platform combinations.
 
 The BulletSim universal library previously posted here was working across both CPU architectures but
 did not support macOS versions older than Monterey. Today's release includes an update to the Bullet
-universal library that includes support for [all macOS versions that dotnet6 supports](https://learn.microsoft.com/en-us/dotnet/core/install/macos),
+universal library that includes support for [all macOS versions that dotnet6 supports](https://learn.microsoft.com/en-us/dotnet/core/install/macOS),
 Catalina (10.15) through Ventura (13.x). In addition, the other two unmanaged libraries in
 Opensimulator --  ubODE and openJpeg -- are now available as universal libraries as well, with 
 the same CPU and macOS version support. All libraries are code signed with Apple. 
@@ -41,7 +41,7 @@ Opensimulator trunk, and are available from this repository. Please try them and
 on your success.
 
 The Bullet universal binary listed above includes all the current
-bugfix patches (including [this patch](https://bitbucket.org/opensimulator/opensim-libs/src/master/trunk/unmanaged/BulletSim/0001-Call-setWorldTransform-when-object-is-going-inactive.patch)
+bugfix patches (including [this patch](https://bitbucket.org/opensimulator/opensim-libs/src/master/trunk/unmanaged/BulletSim/0001-Call-setWorldTransform-when-object-is-going-inactive.patch))
 and has functional parity with Bullet libraries for other platforms. 
 
 The following files in this repository mirror the latest versions
@@ -58,12 +58,12 @@ There is ongoing work in developing a new version of Bullet for all Opensim plat
 based on the latest version of Bullet, 3.25, and other bug fixes. 
 Misterblue is leading the code development using a new build process that
 I helped develop. I'm also developing a number of in-world test cases that can be used to
-validate physics engine functionality and identify and fix bugs.
+validate physics engine functionality and to identify and fix bugs.
 
 The long term plan is to have the same version, patches, and feature parity across all platforms.
 Misterblue is also working on a major update to the Bullet wrapper that Opensim uses
 with the Bullet engine. The future wrapper version will report the actual Bullet physics version and will be
-mostly 64-bit clean, so is also likely to improve performance.
+mostly 64-bit clean, so it is also likely to improve performance.
 
 We identified some reproducible bugs that still need looking into:
 
@@ -137,9 +137,11 @@ where any steps are different for Intel.
 You will need to install libgdiplus. I recommend using the package manager Brew for this.
 
 To install Brew, run the following at the terminal:
+
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 Next, use Brew to install libgdiplus, which is required for Opensimulator.\
+
 	brew install mono-libgdiplus
 
 This will install about 30 packages which include prerequisites. On Big Sur through Ventura this
@@ -150,6 +152,7 @@ since many of the components need to be compiled. Issue the above command and th
 bring a nice book to read at the coffee house while you wait for it to complete.
 
 On an Apple Silicon computer, create a symbolic link:
+
 	sudo ln -s /opt/homebrew/Cellar/mono-libgdiplus/6.1_1/lib/libgdiplus.dylib /usr/local/lib/libgdiplus.dylib
 
 This link is required because on Apple Silicon, brew installs into
@@ -158,10 +161,12 @@ and ignores shell environments.
 
 Download and install Dotnet6 SDK Installer from the following site.
 Select arm64 or x86_64 depending on your architecture:
+
 	https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 
-Download and install the latest stable Mysql Community Server:
-	https://dev.mysql.com/downloads/mysql/
+Download and install the latest stable MySQL Community Server:
+
+	https://dev.MySQL.com/downloads/MySQL/
 
 On older macOS versions you will need to use a MySQL download from the past releases.
 Use the latest version that is compatible with your operating system.
@@ -171,14 +176,14 @@ Select "Use Legacy Password Encryption” unless you know what you’re doing.
 Opensim does support Secure Encryption but this option is more complex to set up
 and is not needed for standalone or test systems.
     
-Mysql will work fine with the default settings, but if you want to change the 
+MySQL will work fine with the default settings, but if you want to change the 
 settings, you can install a file at /private/etc/my.cnf and use MySQL Pref Pane
 to Apply the changes.
 
-Once the Mysql server is up and running, then either import your existing opensim database or
+Once the MySQL server is up and running, then either import your existing opensim database or
 create a new empty database for a fresh install of opensim. 
 
-Set up a Mysql user account that has all privileges granted for the opensim database. 
+Set up a MySQL user account that has all privileges granted for the opensim database. 
 Confirm the account can access the database by logging in to it with a database client.
 
 -------------
@@ -215,7 +220,7 @@ Once the config files are set up, you are ready to start the server:
 
 
 -------------
-**To build arm64 libraries from source**
+**To build universal libraries (arm64/x86_64) from source**
 
 The following instructions are for reference only and document how the
 macOS libraries in this repository were built. You can use them if you want
@@ -235,7 +240,7 @@ I am including in this repository  a sample
 bashrc file which is a good replacement for the default that Apple provides.
 This has a configuration that merges paths for
 installed apps and libs from Brew (in /opt/homebrew) and from independently
-installed packages like Mysql (in /usr/local). 
+installed packages like MySQL (in /usr/local). 
 
 To install this, backup or rename the file at /private/etc/bashrc, then
 move the file _bashrc_ from this repository to /private/etc/bashrc.
@@ -304,6 +309,7 @@ In each of these add the following compiler flags to any occurrence of CFLAGS, C
 	-arch arm64 -arch x86_64
 
 Then you should be able to run the following commands at the top level of the project to finish the build:
+
 	make
 	cp -f ode/src/.libs/libubode.5.dylib /path/to/opensim/bin/lib64/libubode-[version]-[date]-universal.dylib
 
@@ -325,9 +331,11 @@ used in Opensim trunk, and the latest version 3.25. The only differences are the
 patches that need to be applied before compiling.
 
 For version 2.86, download and unpack the tarball from:
+
 	https://codeload.github.com/bulletphysics/bullet3/tar.gz/2.86.1
 
 Or, if you want to try the latest Bullet version 3.25, download a ZIP file from:
+
 	https://github.com/bulletphysics/bullet3
 
 Apply this [patch](https://bitbucket.org/opensimulator/opensim-libs/src/master/trunk/unmanaged/BulletSim/0001-Call-setWorldTransform-when-object-is-going-inactive.patch)
