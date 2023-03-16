@@ -2,56 +2,68 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v1.8 / 7 March 2023
+v1.9 / 16 March 2023
 
 This project provides instructions and files to run Opensimulator server software
 (http://opensimulator.org) on Apple Silicon (M1/M2) computers fully native,
 and to install a more recent version of the Bullet physics engine on macOS
 or Linux computers.
 
-This project is in active development, and this page will be updated as the project evolves.
+This project is in active development and this page will be updated as the project evolves.
 
-*Apple Silicon*
-
-Instructions and files to run Opensim native on an Apple Silicon Mac have now been
-merged into the main Opensim distribution in the dotnet6 branch, but this page provides
-more detailed instructions.
-For general information on running Opensim on Apple Silicon
+If you just want to run Opensim on Apple Silicon and are not interested in details for developers,
 you can skip down to the General Requirements section below .
 
+*What's New*
+
+This release brings a major update with universal binaries for macOS, which are used 
+in the dotnet6 branch of Opensimulator. The arm64-only libraries in this repository have been working
+fine and no updates are needed on those. However, there is a long-term goal of migrating to
+universal binaries instead of architecture-specific libraries for macOS. These universal
+binaries support Intel and Apple Silicon CPUs in a single file, and provide a simpler path
+to future rebuilding of libraries when updates and bug fixes become available. They also
+simplify the configuration files in Opensimulator which determine which
+libraries should be loaded for various CPU and platform combinations.
+
+The BulletSim universal library previously posted here was working across both CPU architectures but
+did not support macOS versions older than Monterey. Today's release includes an update to the Bullet
+universal library that includes support for [all macOS versions that dotnet6 supports](https://learn.microsoft.com/en-us/dotnet/core/install/macos),
+Catalina (10.15) through Ventura (13.x). In addition, the other two unmanaged libraries in
+Opensimulator --  ubODE and openJpeg -- are now available as universal libraries as well, with 
+the same CPU and macOS version support. All libraries are code signed with Apple. 
+
+  - libBulletSim-2.86-20230316-universal.dylib
+  - libopenjpeg-2-1.5.0-20230316-universal.dylib
+  - libubode.5-20230316-universal.dylib
+
+At the time of this writing, these universal binaries have not yet been merged into the
+Opensimulator trunk, and are available from this repository. Please try them and provide feedback
+on your success.
+
+The Bullet universal binary listed above includes all the current
+bugfix patches (including [this patch](https://bitbucket.org/opensimulator/opensim-libs/src/master/trunk/unmanaged/BulletSim/0001-Call-setWorldTransform-when-object-is-going-inactive.patch)
+and has functional parity with Bullet libraries for other platforms. 
+
 The following files in this repository mirror the latest versions
-in the Opensim repository (dotnet6 branch).
+in the Opensim repository (dotnet6 branch), but will probably be replaced
+by the universal binaries at some point.
 These are code-signed with Apple and were built with the process detailed in a later section.
-  - libBulletSim-2.86.1-20221213-universal.dylib
   - libopenjpeg-arm64.dylib
   - libubode-arm64.dylib
 
-The Bullet library listed above is a universal binary
-compatible with both arm64 and x86\_64 macOS architectures.
-It includes a [patch](https://bitbucket.org/opensimulator/opensim-libs/src/master/trunk/unmanaged/BulletSim/0001-Call-setWorldTransform-when-object-is-going-inactive.patch)
-that was missing on macOS since 2019, and now restored and merged with Opensim 
-main distribution as of January 2023.
-Thanks to Misterblue who was able to identify an observed bug with 
-a patch he developed.
 
-At some point Openjpeg will be migrated to a universal binary in the Opensim 
-distribution. The following is a candidate to replace the arm64-only library.
-  - libopenjpeg-universal.dylib
-  
 *Bullet Physics*
 
-Misterblue and I are working on a new version of Bullet for all Opensim platforms, 
+There is ongoing work in developing a new version of Bullet for all Opensim platforms, 
 based on the latest version of Bullet, 3.25, and other bug fixes. 
-Misterblue has long-standing knowledge of
-Bullet and extensive software development experience and is leading the code development.
-I've contributed a new method for the build process of Bullet engine that works
-with Bullet 3.25 on macOS and Linux,
-and provided a number of in-world test cases that can be used to identify and fix bugs.
+Misterblue is leading the code development using a new build process that
+I helped develop. I'm also developing a number of in-world test cases that can be used to
+validate physics engine functionality and identify and fix bugs.
 
-The plan is to have the same version, patches, and feature parity across all platforms.
+The long term plan is to have the same version, patches, and feature parity across all platforms.
 Misterblue is also working on a major update to the Bullet wrapper that Opensim uses
-with the Bullet engine. This will report the actual Bullet version and will be
-mostly 64-bit clean so is likely to improve performance.
+with the Bullet engine. The future wrapper version will report the actual Bullet physics version and will be
+mostly 64-bit clean, so is also likely to improve performance.
 
 We identified some reproducible bugs that still need looking into:
 
@@ -59,10 +71,8 @@ We identified some reproducible bugs that still need looking into:
 
 2) Physics objects that go into physics "sleep" state do not wake up properly in some use cases
 
-As we develop new test versions of Bullet libs, in-world testing areas will need to be set up and
-some testing done. At some point, after appropriate testing, discussions and fixes,
+Eventually, after appropriate testing, discussions and fixes,
 Bullet libraries in Opensim trunk will be replaced with the new version.
-
 Until then, I will try to keep this page updated with the latest status.
 
 I'm providing experimental versions of the Bullet library using the
@@ -70,7 +80,8 @@ updated 3.25 version of Bullet physics and the 0001 patch described above.
 These should be at least as good as the current version, adding the latest
 Bullet engine, although they still use the old (current) Bullet wrapper and
 don't yet resolve the bugs described above.
-  - libBulletSim-3.25-20221213-universal.dylib  (macOS x86\_64 and arm64)
+
+  - libBulletSim-3.25-20230315-universal.dylib  (x86\_64 and arm64, macOS 10.15-13.x)
   - libBulletSim-3.25-x86_64-20230211.so (64-bit Linux, built on Ubuntu)
 
 To install,
@@ -86,7 +97,7 @@ For macOS, you would change the line:
 
 to:
 
-	<dllmap os="osx" dll="BulletSim" target="lib64/libBulletSim-3.25-20221213-universal.dylib" />
+	<dllmap os="osx" dll="BulletSim" target="lib64/libBulletSim-3.25-20230315-universal.dylibb" />
 
 For 64-bit Linux, you would change the line:
 
@@ -110,7 +121,7 @@ issue on other use cases. A cleaner long-term solution is needed.
 The change may have the effect of using more CPU on physics-enabled objects.
   - libBulletSim-3.25-20221215-universal-NOSLEEP.dylib
 
-We are trying to get more feedback from people who are testing this. Please let us know
+We are looking for feedback from people who are testing this. Please let us know
 about your successes or issues!
 
 This work is licensed under Creative Commons BY-NC-SA 3.0:
@@ -120,42 +131,45 @@ https://creativecommons.org/licenses/by-nc-sa/3.0/
 **General Requirements to Run Opensim on Apple Silicon**
 
 An Apple computer with an M1 or M2 chip. Currently the entire line of Apple Macs
-are using these.
+are using these. Most of the setup process described here works the same on Intel macs. I will note
+where any steps are different for Intel.
 
 You will need to install libgdiplus. I recommend using the package manager Brew for this.
 
 To install Brew, run the following at the terminal:
-
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-Next, use Brew to install libgdiplus, which is required for Opensimulator.
-
+Next, use Brew to install libgdiplus, which is required for Opensimulator.\
 	brew install mono-libgdiplus
 
-This will install about 30 packages which include prerequisites.
+This will install about 30 packages which include prerequisites. On Big Sur through Ventura this
+process takes a few minutes.
 
-To complete the installation, create a symbolic link:
+If you are on Catalina, the installation works, but it can take several hours
+since many of the components need to be compiled. Issue the above command and then 
+bring a nice book to read at the coffee house while you wait for it to complete.
 
+On an Apple Silicon computer, create a symbolic link:
 	sudo ln -s /opt/homebrew/Cellar/mono-libgdiplus/6.1_1/lib/libgdiplus.dylib /usr/local/lib/libgdiplus.dylib
 
 This link is required because on Apple Silicon, brew installs into
-/opt/homebrew/, but Dotnet uses /usr/local as a hard-coded path 
+/opt/homebrew/ instead of /usr/local. Dotnet uses /usr/local as a hard-coded path 
 and ignores shell environments.
 
-Download and install Dotnet6 SDK Installer for Arm64:
+Download and install Dotnet6 SDK Installer from the following site.
+Select arm64 or x86_64 depending on your architecture:
 	https://dotnet.microsoft.com/en-us/download/dotnet/6.0
 
 Download and install the latest stable Mysql Community Server:
 	https://dev.mysql.com/downloads/mysql/
 
-The Mysql website confuses many people, so I'm providing some details on this step:
-  - After selecting the DMG package, on the next screen, click “No thanks, just start my download.”
-  - After the file has downloaded, to open it, right-click on the DMG installer file and select Open.
-  - In the dialog that follows, click Open once again.
-  - During installation, you will be prompted to choose Legacy or Secure encryption.
-    Select "Use Legacy Password Encryption” unless you know what you’re doing.
-    Opensim does support Secure Encryption but this option is more complex to set up
-    and is not needed for standalone or test systems.
+On older macOS versions you will need to use a MySQL download from the past releases.
+Use the latest version that is compatible with your operating system.
+
+During MySQL installation, you will be prompted to choose Legacy or Secure encryption.
+Select "Use Legacy Password Encryption” unless you know what you’re doing.
+Opensim does support Secure Encryption but this option is more complex to set up
+and is not needed for standalone or test systems.
     
 Mysql will work fine with the default settings, but if you want to change the 
 settings, you can install a file at /private/etc/my.cnf and use MySQL Pref Pane
@@ -164,7 +178,7 @@ to Apply the changes.
 Once the Mysql server is up and running, then either import your existing opensim database or
 create a new empty database for a fresh install of opensim. 
 
-Set up a Mysql user account that has all priveleges granted for the opensim database. 
+Set up a Mysql user account that has all privileges granted for the opensim database. 
 Confirm the account can access the database by logging in to it with a database client.
 
 -------------
@@ -203,9 +217,10 @@ Once the config files are set up, you are ready to start the server:
 -------------
 **To build arm64 libraries from source**
 
-The instructions that follow are only needed if you want
-to build the libraries yourself for some reason. They are included here
-for reference.
+The following instructions are for reference only and document how the
+macOS libraries in this repository were built. You can use them if you want
+to build the libraries yourself for some reason. 
+I have updated the instructions for universal binaries.
 
 You will need to have a shell environment with environment 
 variables appropriately set for the development work. Bash (Bourne-again shell)
@@ -218,11 +233,11 @@ This opens a window where you can change your default shell to /bin/bash.
 
 I am including in this repository  a sample
 bashrc file which is a good replacement for the default that Apple provides.
-This has a confirguration that merges paths for
+This has a configuration that merges paths for
 installed apps and libs from Brew (in /opt/homebrew) and from independently
 installed packages like Mysql (in /usr/local). 
 
-To install this, back up or rename the file at /private/etc/bashrc, then
+To install this, backup or rename the file at /private/etc/bashrc, then
 move the file _bashrc_ from this repository to /private/etc/bashrc.
 
 Once this is installed it will take effect in any new terminal windows
@@ -243,6 +258,9 @@ physics engines.
 
 	git clone git://opensimulator.org/git/opensim-libs
 
+Please note, when building your own libraries, they will work on your system,
+but will need to be code signed with Apple before they will work on other macOS systems.
+
 -------------
 **Installing Libopenjpeg**
 
@@ -261,10 +279,9 @@ Apply it with the following:
 Then build and install the shared library:	
 
 	make -f Makefile.osx
-	cp -f libopenjpeg-dotnet-2-1.5.0-dotnet-1.dylib /path/to/opensim/bin/lib64/libopenjpeg-dotnet-arm64.dylib
+	cp -f libopenjpeg-dotnet-2-1.5.0-dotnet-1.dylib /path/to/opensim/bin/lib64/libopenjpeg-[version]-[date]-universal.dylib
 
-Please note this will work on your system but it will need to be code signed before it will
-work on other macOS systems.
+
 
 -------------
 **Installing ubODE**
@@ -274,11 +291,22 @@ work on other macOS systems.
 	PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"
 	./bootstrap
 	./configure --enable-shared --enable-double-precision 
-	make
-	cp -f ode/src/.libs/libubode.5.dylib /path/to/opensim/bin/lib64/libubode-arm64.dylib
 
-Please note this will work on your system but it will need to be code signed before it will
-work on other macOS systems.
+The build system doesn't support multi-CPU options without hand-editing Makefiles.	
+At this point, for building a universal binary, you need to hand-edit the following three Makefiles:
+
+- [path to ubODE-OpenSim]/Makefile
+- [path to ubODE-OpenSim]/ou/Makefile
+- [path to ubODE-OpenSim]/ou/src/ou/Makefile
+
+In each of these add the following compiler flags to any occurrence of CFLAGS, CPPFLAGS and CXXFLAGS:
+
+	-arch arm64 -arch x86_64
+
+Then you should be able to run the following commands at the top level of the project to finish the build:
+	make
+	cp -f ode/src/.libs/libubode.5.dylib /path/to/opensim/bin/lib64/libubode-[version]-[date]-universal.dylib
+
 	
 -------------
 **Installing Bullet** 
@@ -292,11 +320,11 @@ install library archive files (.a) and include files into temporary directories.
 "Bullet Glue" which packages the Bullet libraries, along with connector
 libraries, into a single static library.
 
-The version of Bullet currently in opensim-libs repository is 2.74, however, this will not
-build on an Apple M1. A more recent version, 2.86, does build and install and
-appears to work fine with Opensim.
+The build process described here works the same on Bullet version 2.86, the version currently
+used in Opensim trunk, and the latest version 3.25. The only differences are the
+patches that need to be applied before compiling.
 
-Download and unpack the tarball for Bullet 2.86 (the current supported version in Opensim) from:
+For version 2.86, download and unpack the tarball from:
 	https://codeload.github.com/bulletphysics/bullet3/tar.gz/2.86.1
 
 Or, if you want to try the latest Bullet version 3.25, download a ZIP file from:
@@ -313,10 +341,10 @@ Place it in the top level directory and apply it with the following:
 
 	patch -p1 < bullet-2.86-mac-arm64-x86_64.patch
 
-Then build and install the shared library.The same build process works for
-Bullet 2.86 or 3.25. At the terminal, change directory to the top level or your
-Bullet distriibution. Depending on your version this will be _bullet3-2.86.1_ or _bullet-master_.
-The following instructions describe steps using bullet3-2.86.1. 
+At the terminal, change directory to the top level or your
+Bullet distribution. Depending on your version this will be _bullet3-2.86.1_ or _bullet-master_.
+The following instructions reference bullet3-2.86.1, but the steps are the same for
+either version.
 
 Note that the cmake command listed below merges flags needed for either Bullet version. You can use the
 same command for either version; flags not recognized will just be ignored.
@@ -331,16 +359,6 @@ same command for either version; flags not recognized will just be ignored.
 This installs
   - Bullet .a files to bullet3-2.86.1/bullet-build/install/lib
   - Bullet includes into bullet3-2.86.1/bullet-build/install/include/bullet
-
-Note that if you are trying to build a universal binary, change the above cmake command
-by replacing
-
-	-DCMAKE\_CXX\_FLAGS="-fPIC"
-	
-with
-
-	-DCMAKE_CXX_FLAGS="-fPIC -arch arm64 -arch x86_64"
-
 
 
 Step 2 requires building the Bullet glue:
@@ -361,21 +379,18 @@ Edit the Makefile and set IDIR and LDIR to the path for your .a and include file
 	LDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/lib
 	IDIR = /full/path/to/bullet3-2.86.1/bullet-build/install/include/bullet
 
-If you want to build a universal binary, also replace any occurrence of "-arch arm64" with 
+To build a universal binary, also replace any occurrence of "-arch arm64" with 
 "-arch arm64 -arch x86_64".
 
 Then build and install:
 
 	make
-	cp -f libBulletSim.dylib /path/to/opensim/bin/lib64/libBulletSim-arm64.dylib
-
-Please note this will work on your system but it will need to be code signed before it will
-work on other macOS systems.
+	cp -f libBulletSim.dylib /path/to/opensim/bin/lib64/libBulletSim-[version]-[date]-universal.dylib
 
 
 -------------
 
-Please notify me of any bugs or feature requests.
+This is a work in progess. Please notify me of any bugs or feature requests.
 
 Cuga Rajal (Second Life and Opensim)
 

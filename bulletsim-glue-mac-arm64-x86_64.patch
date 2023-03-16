@@ -156,8 +156,8 @@ diff -crB BulletSim/Makefile BulletSimNEW/Makefile
   #LFLAGS = -m32 -dynamiclib -Wl -o $(TARGET)
   #CFLAGS = -m32 -arch i386 -stdlib=libstdc++ -mmacosx-version-min=10.6 -I$(IDIR) -g 
   #LFLAGS = -v -m32 -arch i386 -std=c++11 -stdlib=libstdc++ -mmacosx-version-min=10.6 -dynamic -o $(TARGET)
-! CFLAGS = -arch arm64 -fPIC -O2 -I$(IDIR) -g 
-! LFLAGS = -v -dynamiclib -arch arm64 -o $(TARGET)
+! CFLAGS = -arch arm64 -arch x86_64 -fPIC -O2 -I$(IDIR) -g 
+! LFLAGS = -v -dynamiclib -arch arm64 -arch x86_64 -o $(TARGET)
   endif
   
   BASEFILES = API2.cpp BulletSim.cpp
