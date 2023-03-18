@@ -14,6 +14,8 @@ export MANPATH="/opt/homebrew/share/man:/usr/local/share/man:/usr/share/man"
 
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/bin:/usr/libexec:/usr/local/mysql/bin:/System/Library/CoreServices:${PATH}"
 
+export MACOSX_DEPLOYMENT_TARGET=10.15
+
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
 # set the umask

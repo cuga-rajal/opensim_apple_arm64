@@ -2,7 +2,7 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v1.9 / 16 March 2023
+v1.9.1 / 18 March 2023
 
 This project provides instructions and files to run Opensimulator server software
 (http://opensimulator.org) on Apple Silicon (M1/M2) computers fully native,
@@ -230,6 +230,11 @@ I have updated the instructions for universal binaries.
 You will need to have a shell environment with environment 
 variables appropriately set for the development work. Bash (Bourne-again shell)
 is the preferred shell when working with older unmanaged software.
+
+Please note that the environment variables must include MACOSX\_DEPLOYMENT\_TARGET
+in order for the libraries to run on macOS versions earlier than the machine doing the
+building. At the time of this writing the macOS versions supported by dotnet6
+are 10.15 through 13.x, so MACOSX\_DEPLOYMENT\_TARGET should be set to 10.15.
 
 Apple sets the default shell to zsh, so this will need to be changed.
 Open the Users
