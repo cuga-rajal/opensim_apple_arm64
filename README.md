@@ -2,7 +2,7 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v1.9.1 / 18 March 2023
+v2.0 / 23 March 2023
 
 This project provides instructions and files to run Opensimulator server software
 (http://opensimulator.org) on Apple Silicon (M1/M2) computers fully native,
@@ -16,41 +16,20 @@ you can skip down to the General Requirements section below .
 
 *What's New*
 
-This release brings a major update with universal binaries for macOS, which are used 
-in the dotnet6 branch of Opensimulator. The arm64-only libraries in this repository have been working
-fine and no updates are needed on those. However, there is a long-term goal of migrating to
-universal binaries instead of architecture-specific libraries for macOS. These universal
-binaries support Intel and Apple Silicon CPUs in a single file, and provide a simpler path
-to future rebuilding of libraries when updates and bug fixes become available. They also
-simplify the configuration files in Opensimulator which determine which
-libraries should be loaded for various CPU and platform combinations.
-
-The BulletSim universal library previously posted here was working across both CPU architectures but
-did not support macOS versions older than Monterey. Today's release includes an update to the Bullet
-universal library that includes support for [all macOS versions that dotnet6 supports](https://learn.microsoft.com/en-us/dotnet/core/install/macOS),
-Catalina (10.15) through Ventura (13.x). In addition, the other two unmanaged libraries in
-Opensimulator --  ubODE and openJpeg -- are now available as universal libraries as well, with 
-the same CPU and macOS version support. All libraries are code signed with Apple. 
+Universal binaries for macOS, posted here last week, have been merged
+into the dotnet6 branch of Opensimulator. The following libraries in this repository
+mirror the ones in the Opensimulator source code (dotnet6 branch):
 
   - libBulletSim-2.86-20230316-universal.dylib
   - libopenjpeg-2-1.5.0-20230316-universal.dylib
   - libubode.5-20230316-universal.dylib
 
-At the time of this writing, these universal binaries have not yet been merged into the
-Opensimulator trunk, and are available from this repository. Please try them and provide feedback
-on your success.
+These filenames have been renamed in the Opensimulator source code. 
+The build process for these libraries is documented further on this page.
 
-The Bullet universal binary listed above includes all the current
+The Bullet library includes all the current
 bugfix patches (including [this patch](https://bitbucket.org/opensimulator/opensim-libs/src/master/trunk/unmanaged/BulletSim/0001-Call-setWorldTransform-when-object-is-going-inactive.patch))
 and has functional parity with Bullet libraries for other platforms. 
-
-The following files in this repository mirror the latest versions
-in the Opensim repository (dotnet6 branch), but will probably be replaced
-by the universal binaries at some point.
-These are code-signed with Apple and were built with the process detailed in a later section.
-  - libopenjpeg-arm64.dylib
-  - libubode-arm64.dylib
-
 
 *Bullet Physics*
 
