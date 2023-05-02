@@ -2,7 +2,7 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v2.1 / 18 April 2023
+v2.1.1 / 2 May 2023
 
 This project provides files and instructions to run Opensimulator server software
 (http://opensimulator.org) fully native on Apple Silicon (M1/M2) computers,
@@ -32,9 +32,10 @@ then use the one you have. I have only tested it with Homebrew.
 If you use Brew to install Libgdiplus, on an Apple Silicon computer, you
 also need to create a symbolic link:
 
-	sudo ln -s /opt/homebrew/Cellar/mono-libgdiplus/6.1_1/lib/libgdiplus.dylib /usr/local/lib/libgdiplus.dylib
+	sudo ln -s /opt/homebrew/Cellar/mono-libgdiplus/6.1_2/lib/libgdiplus.dylib /usr/local/lib/libgdiplus.dylib
 
-This link is required because on Apple Silicon, brew installs into
+Note that you will need to re-create this symbolic link each time there is a
+version update to libgdiplus. This link is required because on Apple Silicon, brew installs into
 /opt/homebrew/ instead of /usr/local. Dotnet uses /usr/local as a hard-coded path 
 and ignores shell environments.
 
