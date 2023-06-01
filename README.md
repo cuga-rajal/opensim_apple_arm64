@@ -48,8 +48,8 @@ You may need to uninstall Mono, or adjust
 your environment variables so that you don't have a mix of source libraries.
 Then recompile Opensim. 
 
-
-*What's New*
+-------------
+**What's New**
 
 For the past few months there has been ongoing work in developing a new version of Bullet for
 all Opensim platforms, 
@@ -77,7 +77,7 @@ module. The new option can disable physics sleep of individual objects through a
 (See http://opensimulator.org/wiki/ExtendedPhysics)
 
 Misterblue also updated the Bullet wrapper to version 1.2
-which displays the correct Bullet version nuber when queried in-world through scripting functions.
+which displays the correct Bullet version number when queried in-world through scripting functions.
 It updates some 32-bit variables to 64-bit which may give minor performance improvements.
 It also integrates some Mac-compatibility patches previously posted here so those
 will no longer be needed.
@@ -88,7 +88,7 @@ current that some exteneded testing would be required.
 Bullet 3.25 is not significantly different and we expect it to can released to
 the main Opensimulator distribution without any major testing in the near future.
 
-I'm providing a pre-release of the Bullet 3.25 library for macOS:
+I'm providing a pre-release of the Bullet 3.25 library for macOS i this repository:
 
   - libBulletSim-3.25-20230527-universal.dylib (x86\_64 and arm64, macOS 10.15-13.x)
 
