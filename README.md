@@ -88,7 +88,7 @@ current that some exteneded testing would be required.
 Bullet 3.25 is not significantly different and we expect it to can released to
 the main Opensimulator distribution without any major testing in the near future.
 
-I'm providing a pre-release of the Bullet 3.25 library for macOS i this repository:
+I'm providing a pre-release of the Bullet 3.25 library for macOS in this repository:
 
   - libBulletSim-3.25-20230527-universal.dylib (x86\_64 and arm64, macOS 10.15-13.x)
 
