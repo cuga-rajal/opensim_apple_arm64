@@ -2,26 +2,28 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v2.1.1 / 2 May 2023
+v2.2 / 1 June 2023
 
 This project provides files and instructions to run Opensimulator server software
 (http://opensimulator.org) fully native on Apple Silicon (M1/M2) computers,
 and to install a more recent version of the Bullet physics engine on 
 Apple Silicon or Intel based Apple Macs, or on Intel-based Linux computers (Ubuntu).
 
-This project has mostly been merged into the main distribution of Opensimulator.
-Work is still ongoing with a new version of Bullet Physics.
+As of June 2023 this project has mostly been merged into the main distribution of
+Opensimulator. However this project may be used to develop future versions of arm64
+unmanaged libraries for Opensimulator to support bug fixes or updates. There is still 
+ongoing work with the Bullet physics engine (see below.)
 
-This project provides the following unmanaged libraries for Opensimulator server software
-to run on Apple Silicon hardware. These
-were built as "Universal Binaries"
+The following unmanaged libraries in this repository for Apple Silicon hardware have been 
+merged into the main Opensimulator distribution (dotnet6 branch). These
+were built as Universal Binaries
 containing multi-architecture including arm64 (Apple Silicon) and x86_64 (Intel):
 
   - libBulletSim-2.86-20230316-universal.dylib
   - libopenjpeg-2-1.5.0-20230316-universal.dylib
   - libubode.5-20230316-universal.dylib
 
-The build process is detailed further down on this page.
+The build process is documented further down on this page.
 
 If you just want to run Opensim on Apple Silicon and are not interested in details for developers,
 the build instructions [here](http://opensimulator.org/wiki/Build_Instructions#Building_on_Linux_.2F_Mac)
@@ -49,39 +51,46 @@ Then recompile Opensim.
 
 *What's New*
 
-There is ongoing work in developing a new version of Bullet for all Opensim platforms, 
+For the past few months there has been ongoing work in developing a new version of Bullet for
+all Opensim platforms, 
 based on the latest version of Bullet, 3.25, and other bug fixes. 
+
 I was initially tinkering with Bullet 3.25 for macOS as an experimental version after
 I developed a process that supported building the new Bullet version for Apple Silicon hardware.
 Opensimulator is currently on Bullet version 2.86.
 
-Misterblue is the lead developer for Bullet implementation on Opensimulator
-and adapted my work to create a plan for updating Bullet on all supported architectures of Opensimulator.
-He developed a new build automation process for multiple
-architectures and added a number of enhancements and bug fixes on top of the
-latest Bullet version. We are working together to look at test cases and known issues:
+Misterblue, the lead developer for Bullet implementation on Opensimulator,
+adapted my build process for other platforms and created a new build automation for multiple
+architectures, along with some enhancements and bug fixes on top of the latest Bullet version.
 
-1) Some of the console commands to change Bullet parameters do not appear to be taking hold
+Misterblue and I were aware of some physics-related bugs and use cases
+and wanted to fix those issues in the upcoming version. The biggest issue was use cases in which
+the Bullet physics sleep function did not wake from sleep properly in some cases.
 
-2) Physics objects that go into physics "sleep" state do not wake up properly in some use cases
+Initially, Misterblue was going to develop a patch for the Bullet code to resolve these
+issues. But the physics sleep code was so deeply engrained in the project,
+any potential changes 
+would have been major and would have potentially introduced other instabilities. 
+In his research Misterblue discovered an API to disable physics sleep from individual objects.
+This allowed him to address the problems by adding a new scripting option to the Extended Physics
+module. The new option can disable physics sleep of individual objects through a new extended LSL scripting function.
+(See http://opensimulator.org/wiki/ExtendedPhysics)
 
-Misterblue is also upgrading the Bullet wrapper. This includes reporting the actual
-Bullet physics version, and be mostly 64-bit clean which may improve performance.
+Misterblue also updated the Bullet wrapper to version 1.2
+which displays the correct Bullet version nuber when queried in-world through scripting functions.
+It updates some 32-bit variables to 64-bit which may give minor performance improvements.
+It also integrates some Mac-compatibility patches previously posted here so those
+will no longer be needed.
 
-The long term plan is to have the same version, patches, and feature parity across all platforms.
-Eventually, after appropriate testing, discussions and fixes,
-the new test versions of Bullet will be merged into Opensimulator main distribution.
+No further patches or changes are planned for Bullet before it's release.
+Initially, we expected the new Bullet version to be different enough from the
+current that some exteneded testing would be required.
+Bullet 3.25 is not significantly different and we expect it to can released to
+the main Opensimulator distribution without any major testing in the near future.
 
-Until then, I will try to keep this page updated with the latest status.
+I'm providing a pre-release of the Bullet 3.25 library for macOS:
 
-I'm providing experimental versions of the Bullet 3.25 library for macOS and
-Ubuntu Linux. 
-These should be at least as good as the current version, adding the latest
-Bullet engine, although they still use the old (current) Bullet wrapper and
-don't yet resolve the bugs described above.
-
-  - libBulletSim-3.25-20230315-universal.dylib  (x86\_64 and arm64, macOS 10.15-13.x)
-  - libBulletSim-3.25-x86_64-20230211.so (64-bit Linux, built on Ubuntu)
+  - libBulletSim-3.25-20230527-universal.dylib (x86\_64 and arm64, macOS 10.15-13.x)
 
 To install,
 first place the file in opensim/bin/lib64/. Back up an original copy of the file
@@ -89,21 +98,6 @@ first place the file in opensim/bin/lib64/. Back up an original copy of the file
 	/bin/OpenSim.Region.PhysicsModule.BulletS.dll.config
 
 then edit that file to point to the new dylib file.
-
-
-And lastly, I am providing an experimental version of Bullet 3.25, the same as the one
-above but with the Bullet sleep feature disabled using the patch _Bullet-disable-sleeping.patch_
-from this repository. This replaces the 0001 patch and effectively 
-disables the switching between object sleep and wake states.
-
-  - libBulletSim-3.25-20221215-universal-NOSLEEP.dylib
-
-This is a hack
-and not the best way to accomplish shutting off the physics sleep feature. But it is an 
-easy way to determine if an observed bug is related to the physics sleep feature.
-This hack resolves bugs for some use cases with "stuck" prims but regresses the wandering-prim
-issue on other use cases. A cleaner long-term solution is needed.
-The change may have the effect of using more CPU on physics-enabled objects.
   
 
 We are looking for feedback from people who are testing this. Please let us know
@@ -113,9 +107,9 @@ This work is licensed under Creative Commons BY-NC-SA 3.0:
 https://creativecommons.org/licenses/by-nc-sa/3.0/
 
 -------------
-**To build universal libraries (arm64/x86_64) from source**
+**How to build universal libraries (arm64/x86_64) from source**
 
-The following documents the build process.
+The following documents the build process for the macOS unmanaged libraries.
 You can build the libraries yourself if you want to for some reason. 
 I updated the instructions for universal binaries.
 
@@ -151,16 +145,10 @@ You can install it by typing the following at the command line:
 
 	xcode-select --install
 
-Download the repository for opensim-libs, which contains projects needed for the
-physics engines. 
-
-	git clone git://opensimulator.org/git/opensim-libs
-
 Before you begin building, your environment variables must include MACOSX\_DEPLOYMENT\_TARGET
 in order for the libraries to run on macOS versions earlier than the machine doing the
 building. At the time of this writing the macOS versions supported by dotnet6
 are 10.15 through 13.x, so MACOSX\_DEPLOYMENT\_TARGET should be set to 10.15.
-
 
 Please note that when building your own libraries, they will work on your system,
 but they will need to be code signed with Apple before they will work on other macOS systems.
@@ -190,6 +178,12 @@ Then build and install the shared library:
 -------------
 **Installing ubODE**
 
+Download the repository for opensim-libs, which contains projects needed for the
+physics engines. 
+
+	git clone git://opensimulator.org/git/opensim-libs
+	
+Then start the build process:
 	cd /path/to/opensim-libs/trunk/unmanaged/ubODE-OpenSim
 	brew install libtool automake
 	PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"
@@ -219,11 +213,12 @@ Then you should be able to run the following commands at the top level of the pr
 Building Bullet requires cmake. If not already installed, install it with brew:
 
 	brew install cmake
-	
+
 Bullet installation is done in 2 steps. First, compile a Bullet distribution and
 install library archive files (.a) and include files into temporary directories. Then, compile the
 "Bullet Glue" which packages the Bullet libraries, along with connector
 libraries, into a single static library.
+
 
 The build process described here works the same on Bullet version 2.86, the version currently
 used in Opensim trunk, and the latest version 3.25. The only differences are the
