@@ -2,22 +2,22 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v2.2 / 1 June 2023
+v2.3 / 1 August 2023
 
-This project provides files and instructions to run Opensimulator server software
-(http://opensimulator.org) fully native on Apple Silicon (M1/M2) computers,
-and to install a more recent version of the Bullet physics engine on 
-Apple Silicon or Intel based Apple Macs, or on Intel-based Linux computers (Ubuntu).
+This project provides files and instructions to run
+[Opensimulator server software](http://opensimulator.org) fully native on macOS
+(Apple Silicon or Intel),
+and to install a more recent version of the [Bullet physics engine](https://github.com/bulletphysics/bullet3)
+on the macOS port of Opensimulator.
 
-As of June 2023 this project has mostly been merged into the main distribution of
-Opensimulator. However this project may be used to develop future versions of arm64
-unmanaged libraries for Opensimulator to support bug fixes or updates. There is still 
-ongoing work with the Bullet physics engine (see below.)
+As of June 2023 most this project has been merged into the main distribution of
+Opensimulator. This project will continue to provide updates and release candidates
+as bug fixes become available. There is still ongoing work with the Bullet physics engine, details below.
 
-The following unmanaged libraries in this repository for Apple Silicon hardware have been 
+The following unmanaged libraries for macOS in this repository have been 
 merged into the main Opensimulator distribution (dotnet6 branch). These
 were built as Universal Binaries
-containing multi-architecture including arm64 (Apple Silicon) and x86_64 (Intel):
+containing arm64 and x86_64 architectures and are code signed with Apple:
 
   - libBulletSim-2.86-20230316-universal.dylib
   - libopenjpeg-2-1.5.0-20230316-universal.dylib
@@ -25,9 +25,10 @@ containing multi-architecture including arm64 (Apple Silicon) and x86_64 (Intel)
 
 The build process is documented further down on this page.
 
-If you just want to run Opensim on Apple Silicon and are not interested in details for developers,
-the build instructions [here](http://opensimulator.org/wiki/Build_Instructions#Building_on_Linux_.2F_Mac)
-are up to date and correct. You will need to install dotnet6 from a download at Microsoft's website
+General instructions to run Opensimuator server on macOS can be found
+[here](http://opensimulator.org/wiki/Build_Instructions#Building_on_Linux_.2F_Mac)
+
+You will need to install dotnet6 from a download at Microsoft's website
 and libgdiplus from either Homebrew or Macports. If you are already using one of these package managers
 then use the one you have. I have only tested it with Homebrew.
 
@@ -36,10 +37,11 @@ also need to create a symbolic link:
 
 	sudo ln -s /opt/homebrew/Cellar/mono-libgdiplus/6.1_2/lib/libgdiplus.dylib /usr/local/lib/libgdiplus.dylib
 
-Note that you will need to re-create this symbolic link each time there is a
-version update to libgdiplus. This link is required because on Apple Silicon, brew installs into
+This link is required because on Apple Silicon, brew installs into
 /opt/homebrew/ instead of /usr/local. Dotnet uses /usr/local as a hard-coded path 
 and ignores shell environments.
+You will need to re-create this symbolic link each time there is a
+version update to libgdiplus. 
 
 There are mixed reviews of Mono and dotnet6 co-existing. If you have Mono installed
 and then install dotnet6, and run into problems, it's likely due to mixed
@@ -62,33 +64,48 @@ Opensimulator is currently on Bullet version 2.86.
 Misterblue, the lead developer for Bullet implementation on Opensimulator,
 adapted my build process for other platforms and created a new build automation for multiple
 architectures, along with some enhancements and bug fixes on top of the latest Bullet version.
+The general plan is to build Bullet libraries for all the major architectures used in Opensimulator
+from the same code base and build method, to provide the best parity across all platforms.
 
-Misterblue and I were aware of some physics-related bugs and use cases
-and wanted to fix those issues in the upcoming version. The biggest issue was use cases in which
+Misterblue and I were aware of some physics-related bugs and we compared notes
+to make a list of issues. These were not resolved in version 3.25. We wanted to reolve
+at least the biggest issues in the forthcoming Bullet version for Opensimuator.
+
+One issue involved use cases where
 the Bullet physics sleep function did not wake from sleep properly in some cases.
-
-Initially, Misterblue was going to develop a patch for the Bullet code to resolve these
-issues. But the physics sleep code was so deeply engrained in the project,
+Initially, Misterblue was going to develop a patch for the Bullet library to resolve this.
+But the physics sleep code was so deeply engrained in the project,
 any potential changes 
-would have been major and would have potentially introduced other instabilities. 
+would have required major work and would have potentially introduced other instabilities. 
 In his research Misterblue discovered an API to disable physics sleep from individual objects.
-This allowed him to address the problems by adding a new scripting option to the Extended Physics
-module. The new option can disable physics sleep of individual objects through a new extended LSL scripting function.
-(See http://opensimulator.org/wiki/ExtendedPhysics)
+This allowed him to address the problems by adding a new scripting option to the [Extended Physics
+module](http://opensimulator.org/wiki/ExtendedPhysics).
+The new option can disable physics sleep of individual objects through a new extended LSL scripting function.
 
 Misterblue also updated the Bullet wrapper to version 1.2
 which displays the correct Bullet version number when queried in-world through scripting functions.
 It updates some 32-bit variables to 64-bit which may give minor performance improvements.
-It also integrates some Mac-compatibility patches previously posted here so those
-will no longer be needed.
+It also integrates some Mac-compatibility patches previously posted here, so those patches
+will no longer be needed when building Bullet with the v1.2 wrapper.
 
-No further patches or changes are planned for Bullet before it's release.
+A bug was discovered in July 2023 involving a scripting function llDetectedLinkNumber(n)
+being non-operational in Bullet for physics-enabled linksets. We believe the
+bug has always been there but only recently discovered. Misterblue is exploring a fix for this.
+This bug is likely an issue with the interface to Bullet in the Opensimulator code, and not the
+the Bullet library itself. Misterblue wants to take a deeper look to confirm this
+before Bullet 3.25 is released to Opensimulator.
+This is the main issue currently being worked on before Bullet is ready.
+
 Initially, we expected the new Bullet version to be different enough from the
-current that some exteneded testing would be required.
-Bullet 3.25 is not significantly different and we expect it to can released to
-the main Opensimulator distribution without any major testing in the near future.
+current version that some exteneded testing would be required.
+However it turns out this is not the case.
+Bullet 3.25 is not significantly different despite a large jump in the version number from 
+2.86, the one currently used in Opensimulator. We expect it can be released to
+the main Opensimulator distribution without any major testing once the bug reviews are completed.
 
-I'm providing a pre-release of the Bullet 3.25 library for macOS in this repository:
+I'm providing a pre-release of the Bullet 3.25 library for macOS in this repository.
+This should be at least as good as the current version, built with the latest versions of Bullet
+(3.25) and wrapper (1.2).
 
   - libBulletSim-3.25-20230527-universal.dylib (x86\_64 and arm64, macOS 10.15-13.x)
 
@@ -184,6 +201,7 @@ physics engines.
 	git clone git://opensimulator.org/git/opensim-libs
 	
 Then start the build process:
+
 	cd /path/to/opensim-libs/trunk/unmanaged/ubODE-OpenSim
 	brew install libtool automake
 	PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"
