@@ -2,7 +2,7 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v2.3 / 1 August 2023
+v2.5 / 21 August 2023
 
 This project provides files and instructions to run
 [Opensimulator server software](http://opensimulator.org) fully native on macOS
@@ -10,11 +10,32 @@ This project provides files and instructions to run
 and to install a more recent version of the [Bullet physics engine](https://github.com/bulletphysics/bullet3)
 on the macOS port of Opensimulator.
 
-As of June 2023 most this project has been merged into the main distribution of
-Opensimulator. This project will continue to provide updates and release candidates
-as bug fixes become available. There is still ongoing work with the Bullet physics engine, details below.
+The repository contains files required to run Opensimulator server
+software that are unique to the Apple arm64 architecture, allowing it
+to run natively. Some of these have been merged into the Opensimulator
+main distribution. This page also documents the build process. Some files
+in this repository are patches required to build the libraries for the
+macOS platform, and some are development versions of libraries.
 
-The following unmanaged libraries for macOS in this repository have been 
+The three main unmanaged libraries in Opensimulator are provided here for
+Apple arm64. These have been merged into the main distribution of
+Opensimulator. The project will continue to provide updates for unmanaged libraries
+as bug fixes become available.
+
+There is still ongoing work with a new version of the Bullet physics engine, details below.
+
+-------------
+**What's New**
+
+ubODE received a bug fix in August 2023. The file _libubode-5-20230821-universal.dylib_ in this
+repository is a release of the updated version. This is expected to be merged 
+into the OS distribution in the near future.
+
+
+-------------
+**Summary**
+
+The following files in this repository have been 
 merged into the main Opensimulator distribution (dotnet6 branch). These
 were built as Universal Binaries
 containing arm64 and x86_64 architectures and are code signed with Apple:
@@ -51,7 +72,7 @@ your environment variables so that you don't have a mix of source libraries.
 Then recompile Opensim. 
 
 -------------
-**What's New**
+**Bullet Development**
 
 For the past few months there has been ongoing work in developing a new version of Bullet for
 all Opensim platforms, 
@@ -66,9 +87,17 @@ adapted my build process for other platforms and created a new build automation 
 architectures, along with some enhancements and bug fixes on top of the latest Bullet version.
 The general plan is to build Bullet libraries for all the major architectures used in Opensimulator
 from the same code base and build method, to provide the best parity across all platforms.
+His streamlined build process works well on macOS and is being used for all test versions
+of 3.25. 
+
+Misterblue also updated the Bullet wrapper to version 1.2
+which displays the correct Bullet version number when queried in-world through scripting functions.
+It updates some 32-bit variables to 64-bit which may give minor performance improvements.
+It also integrates some Mac-compatibility patches previously posted here, so those patches
+will no longer be needed when building Bullet with the v1.2 wrapper.
 
 Misterblue and I were aware of some physics-related bugs and we compared notes
-to make a list of issues. These were not resolved in version 3.25. We wanted to reolve
+to make a full list of issues. These were not resolved in version 3.25. We wanted to resolve
 at least the biggest issues in the forthcoming Bullet version for Opensimuator.
 
 One issue involved use cases where
@@ -82,22 +111,16 @@ This allowed him to address the problems by adding a new scripting option to the
 module](http://opensimulator.org/wiki/ExtendedPhysics).
 The new option can disable physics sleep of individual objects through a new extended LSL scripting function.
 
-Misterblue also updated the Bullet wrapper to version 1.2
-which displays the correct Bullet version number when queried in-world through scripting functions.
-It updates some 32-bit variables to 64-bit which may give minor performance improvements.
-It also integrates some Mac-compatibility patches previously posted here, so those patches
-will no longer be needed when building Bullet with the v1.2 wrapper.
-
 A bug was discovered in July 2023 involving a scripting function llDetectedLinkNumber(n)
 being non-operational in Bullet for physics-enabled linksets. We believe the
 bug has always been there but only recently discovered. Misterblue is exploring a fix for this.
 This bug is likely an issue with the interface to Bullet in the Opensimulator code, and not the
 the Bullet library itself. Misterblue wants to take a deeper look to confirm this
 before Bullet 3.25 is released to Opensimulator.
-This is the main issue currently being worked on before Bullet is ready.
+This is the main issue currently being worked on before the new version of Bullet is ready.
 
 Initially, we expected the new Bullet version to be different enough from the
-current version that some exteneded testing would be required.
+current version that some extended testing would be required.
 However it turns out this is not the case.
 Bullet 3.25 is not significantly different despite a large jump in the version number from 
 2.86, the one currently used in Opensimulator. We expect it can be released to
@@ -195,6 +218,13 @@ Then build and install the shared library:
 -------------
 **Installing ubODE**
 
+The build process for ubODE changed in August 2023 when I updated macOS to 13.5 (Ventura).
+The following should work on Ventura and earlier versions.
+
+Install the GNU version of libtool and automake, since the versions on macODS don't work with ubODE:
+
+	brew install libtool automake
+	
 Download the repository for opensim-libs, which contains projects needed for the
 physics engines. 
 
@@ -203,24 +233,25 @@ physics engines.
 Then start the build process:
 
 	cd /path/to/opensim-libs/trunk/unmanaged/ubODE-OpenSim
-	brew install libtool automake
 	PATH="/opt/homebrew/opt/libtool/libexec/gnubin:$PATH"
 	./bootstrap
+
+The build system doesn't support multi-CPU options without hand-editing some
+configure files. Edit the following two _configure_ files:
+
+- [path to ubODE-OpenSim]/configure
+- [path to ubODE-OpenSim]/ou/configure
+
+In each of these, search for the occurence of the string "-g -O2" and in each occurence
+add the following compiler flags:
+
+	-arch arm64 -arch x86_64 -stdlib=libc++
+
+The flag "-stdlib=libc++" is required when building on macOS Ventura, but may not be required for earlier macOS versions.
+
+Then you should be able to run configure and make at the top level of the project to finish the build:
+
 	./configure --enable-shared --enable-double-precision 
-
-The build system doesn't support multi-CPU options without hand-editing Makefiles.	
-At this point, for building a universal binary, you need to hand-edit the following three Makefiles:
-
-- [path to ubODE-OpenSim]/Makefile
-- [path to ubODE-OpenSim]/ou/Makefile
-- [path to ubODE-OpenSim]/ou/src/ou/Makefile
-
-In each of these add the following compiler flags to any occurrence of CFLAGS, CPPFLAGS and CXXFLAGS:
-
-	-arch arm64 -arch x86_64
-
-Then you should be able to run the following commands at the top level of the project to finish the build:
-
 	make
 	cp -f ode/src/.libs/libubode.5.dylib /path/to/opensim/bin/lib64/libubode-[version]-[date]-universal.dylib
 
