@@ -2,7 +2,7 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v2.5 / 21 August 2023
+v2.6 / 6 Novenber 2023
 
 This project provides files and instructions to run
 [Opensimulator server software](http://opensimulator.org) fully native on macOS
@@ -27,9 +27,21 @@ There is still ongoing work with a new version of the Bullet physics engine, det
 -------------
 **What's New**
 
-ubODE received a bug fix in August 2023. The file _libubode-5-20230821-universal.dylib_ in this
-repository is a release of the updated version. This is expected to be merged 
-into the OS distribution in the near future.
+All three unmanaged libraries developed a loading problem around November 2, 2023
+when the code signing certificate expired. 
+The following 3 unmanaged libraries in this repo have been updated with new code signing that
+should be good until at least November 2024. 
+
+  - libBulletSim-2.86-20230316-universal.dylib
+  - libopenjpeg-2-1.5.0-20230316-universal.dylib
+  - libubode.5-20230316-universal.dylib
+  
+In addition, the development versio of Bullet 3.25 provided in this repo
+also required new code signing.
+
+  - libBulletSim-3.25-20230527-universal.dylib
+  
+I need to explore a better option for non-expiring code signing. 
 
 
 -------------
