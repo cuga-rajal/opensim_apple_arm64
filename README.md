@@ -2,7 +2,7 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v2.7 / 18 December 2023
+v2.8 / 23 April 2024
 
 This project provides files and instructions to run
 [Opensimulator server software](http://opensimulator.org) fully native on macOS
@@ -34,10 +34,11 @@ March 2024 - Developed roadmap to fix bugs and update OS Bullet from 2.86 to 3.2
 
 July 2023 - MisterBlue adapts the process developed here for Bullet 3.25 to create a multi-platform build process 
 
-November 2024 - macOS binaries provided here were re-code-signed with Apple to resolve a non-loading problem on some systems
+November 2023 - macOS binaries provided here were re-code-signed with Apple to resolve a non-loading problem on some systems
 
 December 2023 - Bullet 3.26 released to OS trunk for all architectures, opensim-libs updated
 
+April 2024 - Note added to summary: Opensimulator now requires dotnet8 which only runs on macOS 12 and above. 
 
 -------------
 **Installing OpenSimulator on an macOS system - Summary**
@@ -45,8 +46,13 @@ December 2023 - Bullet 3.26 released to OS trunk for all architectures, opensim-
 General instructions to run Opensimuator server on macOS can be found
 [here](http://opensimulator.org/wiki/Build_Instructions#Building_on_Linux_.2F_Mac)
 
-You will need to install dotnet6 from a download at Microsoft's website
-and libgdiplus from either Brew or Macports. If you are already using one of these package managers,
+As of today, Opensimulator requires dotnet8 and will not run on dotnet6. Dotnet8 will only run on
+macOS 12.x and greater. If you are already running Opensimulator with an older macOS version
+you will not be able to update Opemsimulator to the latest versions until you upgrade macOS.
+
+For those installing Opensimulator for the first time, you will need to install dotnet8 from a download at Microsoft's website.
+
+You will also need to install libgdiplus from either Brew or Macports. If you are already using one of these package managers,
 then use the one you have. I have only tested it with Brew.
 
 If you use Brew to install Libgdiplus on an Apple Silicon computer, you
