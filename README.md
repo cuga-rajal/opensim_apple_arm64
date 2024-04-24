@@ -66,8 +66,8 @@ and ignores shell environments.
 You will need to re-create this symbolic link each time there is a
 version update to libgdiplus. 
 
-There are mixed reviews of Mono and dotnet6 co-existing. If you have Mono installed
-and then install dotnet6, you may run into problems, likely from mixed
+There are mixed reviews of Mono and dotnet co-existing. If you have Mono installed
+and then install dotnet, you may run into problems, likely from mixed
 library sources at compile time.
 You may need to uninstall Mono, or adjust
 your environment variables so that you don't have a mix of source libraries. 
@@ -170,8 +170,10 @@ You can install it by typing the following at the command line:
 
 Before you begin building, your environment variables must include MACOSX\_DEPLOYMENT\_TARGET
 in order for the libraries to run on macOS versions earlier than the machine doing the
-building. At the time of this writing the macOS versions supported by dotnet6
-are 10.15 through 13.x, so MACOSX\_DEPLOYMENT\_TARGET should be set to 10.15.
+building. For a few years 2020-2024, Opensimulator used dotnet6, which was supported
+on macOS 10.15 through 13.x. At the time of this writing Opensimulator now requires dotnet8 
+which is only supported on macOS 12.x and above. For compatibility with recent distributions, 
+it is best to set MACOSX\_DEPLOYMENT\_TARGET to 10.15. 
 
 Please note that when building your own libraries, they will work on your system,
 but they will need to be code signed with Apple before they will work on other macOS systems.
