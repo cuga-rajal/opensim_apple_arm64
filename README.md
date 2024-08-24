@@ -2,7 +2,7 @@
 
 Opensim Support for Apple Silicon M1/M2
 
-v2.8.1 / 25 June 2024
+v2.8.2 / 24 Aug 2024
 
 This project provides files and instructions to run
 [Opensimulator server software](http://opensimulator.org) fully native on macOS
@@ -40,15 +40,26 @@ December 2023 - Bullet 3.26 released to OS trunk for all architectures, opensim-
 April 2024 - Note added to summary: Opensimulator now requires dotnet8 which is only supported on macOS 12 and above. 
 
 June 2024 - Rescinded April 2024 note. Dotnet 8 runs fine on macOS 10.15 and macOS 11, although officially supported only on macOS 12 or higher.
+
+August 2024 - Dotnet 8 security releases and Opensimulator still compatible with macOS 10.15 and later.
+
 -------------
 **Installing OpenSimulator on an macOS system - Summary**
 
 General instructions to run Opensimuator server on macOS can be found
 [here](http://opensimulator.org/wiki/Build_Instructions#Building_on_Linux_.2F_Mac)
 
-Opensimulator requires dotnet8 and will not run on dotnet6. If you are using Mono or
-Dotnet6 you will need to upgrade to Dotnet8. Dotnet8 is officially supported on
-macOS 12.x or higher but has been found to run fine on macOS 10.15 or higher
+Opensimulator currently requires dotnet8. If you are using Mono or
+Dotnet6 you will need to switch to Dotnet8. Dotnet8 is officially supported on
+macOS 12.x or higher but continues to work fine on macOS 10.15 or higher. 
+
+Similarly, macOS 10.15 is the oldest version that will run the unmanaged libraries bundled with
+Opensimulator, which include libopenjpeg and the Bullet and ubODE physics engines.
+
+Microsoft has been issuing frequent security updates to Dotnet 8.
+Make sure you keep your Dotnet 8 installation up to date as new versions are released.
+Check their download page regularly.
+macOS 10.15 (and later) so far remain compatible with the updates.
 
 For those installing Opensimulator for the first time, you will need to install dotnet8 from a download at Microsoft's website.
 
