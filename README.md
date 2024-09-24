@@ -1,8 +1,10 @@
 # opensim_macOS_arm64
 
-Opensim Support for Apple Silicon M1/M2
+Opensim Support for Apple Silicon (M1/M2/M3)
 
-v2.8.2 / 24 Aug 2024
+v2.8.3 / 24 Sept 2024
+
+**Summary**
 
 This project provides files and instructions to run
 [Opensimulator server software](http://opensimulator.org) fully native on macOS
@@ -12,15 +14,17 @@ on the macOS port of Opensimulator.
 
 Files in this project are now fully merged into the
 OpenSimulator trunk at opensimulator.org, and the project remains here for
-reference. If there are new developments with OpenSimulator or Bullet Physics on
-Apple Silicon hardware that require further development, this page will be
-updated.
+reference. This page will be
+updated if there are new developments with OpenSimulator or Bullet Physics on
+Apple Silicon hardware that require further development.
 
-This page provides reference information for macOS users on
-installing OpenSimulator server software and how to build the unmanaged libraries for the macOS platform.
+This page serves as a reference on how to build Opensimulator's unmanaged libraries for the macOS platform.
 
-See below for a general status of the Bullet physics engine implementation on
-OpenSimulator and known bugs.
+This page also provides supplimental general information for macOS users on
+installing OpenSimulator server software on macOS.
+
+The Bullet physics engine implementation on OpenSimulator has some known bugs.
+See below for a general status.
 
 -------------
 **Project Timeline**
@@ -37,11 +41,11 @@ November 2023 - macOS binaries provided here were re-code-signed with Apple to r
 
 December 2023 - Bullet 3.26 released to OS trunk for all architectures, opensim-libs updated
 
-April 2024 - Note added to summary: Opensimulator now requires dotnet8 which is only supported on macOS 12 and above. 
+April 2024 - Opensimulator now requires dotnet8 which is still supported on macOS 10.15 and above. 
 
-June 2024 - Rescinded April 2024 note. Dotnet 8 runs fine on macOS 10.15 and macOS 11, although officially supported only on macOS 12 or higher.
+August 2024 - Dotnet 8 security releases advised. Opensimulator still compatible with macOS 10.15 and later.
 
-August 2024 - Dotnet 8 security releases and Opensimulator still compatible with macOS 10.15 and later.
+September 2024 - Opensimulator has been tested and is compatible with macOS 15.0 Sequoia released last week..
 
 -------------
 **Installing OpenSimulator on an macOS system - Summary**
@@ -87,12 +91,12 @@ your environment variables so that you don't have a mix of source libraries.
 **Bullet Development**
 
 The current implementation of Bullet in OpenSimulator uses a build process first
-developed in this project and then later adapted by MisterBlue for multiple
+developed in this project and later adapted by MisterBlue for multiple
 architectures. The process added some compatibility code changes in the form of
 diffs and a somewhat different build method than previous releases. The new
-method provided compatibility with the latest version of Bullet, 3.25, allowing a 
+method provided compatibility with the latest version of Bullet, 3.26, allowing a 
 significant version upgrade in addition to the new supported architecture. 
-Bullet version 2.86 had been in use by OpenSimulator for many years.
+Prior to this project, OpenSimulator had been using Bullet version 2.86 for many years.
 
 In March 2023 MisterBlue and I consolidated a list of current bugs and created a
 roadmap to provide an updated version of Bullet for use in OpenSimulator. There
@@ -214,10 +218,7 @@ Then build and install the shared library:
 -------------
 **Installing ubODE**
 
-The build process for ubODE changed in August 2023 when I updated macOS to 13.5 (Ventura).
-The following should work on Ventura and earlier versions.
-
-Install the GNU version of libtool and automake, since the versions on macODS don't work with ubODE:
+Install the GNU version of libtool and automake, since the versions on macOS don't work with ubODE:
 
 	brew install libtool automake
 	
@@ -243,8 +244,6 @@ add the following compiler flags:
 
 	-arch arm64 -arch x86_64 -stdlib=libc++
 
-The flag "-stdlib=libc++" is required when building on macOS Ventura, but may not be required for earlier macOS versions.
-
 Then you should be able to run configure and make at the top level of the project to finish the build:
 
 	./configure --enable-shared --enable-double-precision 
@@ -255,7 +254,7 @@ Then you should be able to run configure and make at the top level of the projec
 -------------
 **Installing Bullet** 
  
-Building Bullet requires cmake. If not already installed, install it with brew:
+Building Bullet requires cmake. If not already installed, install it:
 
 	brew install cmake
 
@@ -267,7 +266,8 @@ haven't already downloaded opensim-libs, see instructions in the ubODE Physics s
 
 As of Dec 18. 2023 the build process for Bullet is greatly simplified compared
 to the previous method which required multiple stages, thanks to MisterBlue's
-all-in-one script. Just run this script:
+all-in-one script. The required patches previously posted in this project have
+been merged. Just run this script:
 
 	./makeBullets.sh
 	
@@ -290,8 +290,8 @@ along side the original:
 
 	cp -f libBulletSim-[version]-[date]-universal.dylib /path/to/opensim/bin/lib64/
 	
-Then, control which Bullet binary loads into the simulator by editing the configuration file
-"osx" section:
+Then, edit the following config file to control which Bullet file loads; The "osx" section
+would need to be edited to point to the new file in:
 
 	/path/to/opensim/bin/OpenSim.Region.PhysicsModule.BulletS.dll.config
 	
