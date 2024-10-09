@@ -2,7 +2,13 @@
 
 Opensim Support for Apple Silicon (M1/M2/M3)
 
-v2.8.3 / 24 Sept 2024
+v2.8.4 / 9 October 2024
+
+**Whats New**
+
+2024-10-09 - Unmanaged library binaries were re-code-signed to resolve a non-loading problem.
+
+
 
 **Summary**
 
@@ -46,6 +52,8 @@ April 2024 - Opensimulator now requires dotnet8 which is still supported on macO
 August 2024 - Dotnet 8 security releases advised. Opensimulator still compatible with macOS 10.15 and later.
 
 September 2024 - Opensimulator has been tested and is compatible with macOS 15.0 Sequoia released last week..
+
+October 2024 - macOS binaries provided here were re-code-signed with Apple to resolve a non-loading problem on some systems
 
 -------------
 **Installing OpenSimulator on an macOS system - Summary**
